@@ -1,7 +1,16 @@
 package uco.i62rorid.Utils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.LinkedList;
 
+/**
+ * The type Json parser.
+ */
 public class JSONParser {
     private static final Integer NOT_A_JSON = 1;
     private static final Integer INCORRECT_TYPE = 2;
@@ -14,6 +23,11 @@ public class JSONParser {
     private Integer fieldEndIndex;
     private Integer keyValueSeparator;
 
+    /**
+     * Instantiates a new Json parser.
+     *
+     * @param JSON the json
+     */
     public JSONParser(String JSON) {
         this.error = 0;
         this.fieldStartIndex = 0;
@@ -30,32 +44,80 @@ public class JSONParser {
             this.JSONString = JSON.substring(1);
     }
 
+    /**
+     * Get error integer.
+     *
+     * @return the integer
+     */
     public Integer getError(){
         return this.error;
     }
 
+    /**
+     * Get key string.
+     *
+     * @return the string
+     */
     public String getKey(){
         if (this.JSONString.charAt(fieldStartIndex) == ',')
             return this.JSONString.substring(fieldStartIndex+1, this.keyValueSeparator);
         return this.JSONString.substring(fieldStartIndex, this.keyValueSeparator);
     }
 
+    /**
+     * Get value as int integer.
+     *
+     * @return the integer
+     */
     public Integer getValueAsInt(){
         return Integer.parseInt(getValue());
     }
 
+    /**
+     * Get value as date date.
+     *
+     * @return the date
+     */
+    public Date getValueAsDate(){
+        try {
+            return new SimpleDateFormat("dd/MM/yyyy-HH:mm").parse(getValue());
+        }catch (ParseException e){
+            return null;
+        }
+    }
+
+    /**
+     * Get value as string string.
+     *
+     * @return the string
+     */
     public String getValueAsString(){
         return this.JSONString.substring(keyValueSeparator+2, fieldEndIndex-1);
     }
 
+    /**
+     * Get value string.
+     *
+     * @return the string
+     */
     public String getValue(){
         return this.JSONString.substring(keyValueSeparator+1, fieldEndIndex);
     }
 
+    /**
+     * Gets value as boolean.
+     *
+     * @return the value as boolean
+     */
     public Boolean getValueAsBoolean() {
         return Boolean.valueOf(getValue());
     }
 
+    /**
+     * Gets value as integer linked list.
+     *
+     * @return the value as integer linked list
+     */
     public LinkedList<Integer> getValueAsIntegerLinkedList() {
         String value = this.getValue();
         value = value.substring(1,value.length()-1);
@@ -111,6 +173,11 @@ public class JSONParser {
         return separatorIndex;
     }
 
+    /**
+     * Goto next field boolean.
+     *
+     * @return the boolean
+     */
     public Boolean gotoNextField(){
         this.fieldStartIndex = this.fieldEndIndex;
         int fieldSeparatorIndex = getNextFieldSeparatorIndex();
@@ -121,5 +188,25 @@ public class JSONParser {
         this.fieldEndIndex = fieldSeparatorIndex;
 
         return true;
+    }
+
+    /**
+     * Get date as string string.
+     *
+     * @param date the date
+     * @return the string
+     */
+    public static String getDateAsString(Date date){
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy-HH:mm");
+        return dateFormat.format(date);
+    }
+
+    /**
+     * Get now date.
+     *
+     * @return the date
+     */
+    public static Date getNow(){
+        return new Date();
     }
 }

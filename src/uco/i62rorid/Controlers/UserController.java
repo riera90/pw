@@ -1,16 +1,21 @@
 package uco.i62rorid.Controlers;
 
-import uco.i62rorid.Connectors.FileConnector;
-import uco.i62rorid.Entities.Topic;
+import uco.i62rorid.Connectors.FileConn;
 import uco.i62rorid.Entities.User;
 
 import java.util.LinkedList;
 
+/**
+ * The type User controller.
+ */
 public class UserController {
-    private FileConnector conn;
+    private FileConn conn;
 
+    /**
+     * Instantiates a new User controller.
+     */
     public UserController(){
-        this.conn = new FileConnector("user.dat");
+        this.conn = new FileConn("user.db");
     }
 
     private Integer getNextId() {
@@ -20,6 +25,11 @@ public class UserController {
         return lastUser.getId()+1;
     }
 
+    /**
+     * Get linked list.
+     *
+     * @return the linked list
+     */
     public LinkedList<User> get(){
         LinkedList<User> users = new LinkedList<>();
         for (String userJson:conn.readAll()){
@@ -28,6 +38,13 @@ public class UserController {
         return users;
     }
 
+    /**
+     * Get by field linked list.
+     *
+     * @param key   the key
+     * @param value the value
+     * @return the linked list
+     */
     public LinkedList<User> getByField(String key, String value){
         LinkedList<User> users = new LinkedList<>();
         for (String userJson:conn.getLineByField(key, value)){
@@ -36,6 +53,13 @@ public class UserController {
         return users;
     }
 
+    /**
+     * Get by field like linked list.
+     *
+     * @param key   the key
+     * @param value the value
+     * @return the linked list
+     */
     public LinkedList<User> getByFieldLike(String key, String value){
         LinkedList<User> users = new LinkedList<>();
         for (String userJson:conn.getLineByFieldLike(key, value)){
@@ -44,26 +68,58 @@ public class UserController {
         return users;
     }
 
+    /**
+     * Get user.
+     *
+     * @param id the id
+     * @return the user
+     */
     public User get(int id){
         return new User(conn.read(id));
     }
 
+    /**
+     * Post user.
+     *
+     * @param user the user
+     * @return the user
+     */
     public User post(User user){
         user.setId(getNextId());
         this.conn.append(user.toJson());
         return new User(this.conn.read(user.getId()));
     }
 
+    /**
+     * Put user.
+     *
+     * @param user the user
+     * @return the user
+     */
     public User put(User user){
         this.conn.update(user.toJson());
         return new User(this.conn.read(user.getId()));
     }
 
+    /**
+     * Patch user.
+     *
+     * @param user the user
+     * @return the user
+     */
     public User patch(User user){
-        this.conn.update(this.conn.read(user.getId()) + user.toJson());
+        User oldUser = new User(this.conn.read(user.getId()));
+        User newUser = new User(oldUser.toJson() + user.toJson());
+        this.conn.update(newUser.toJson());
         return new User(this.conn.read(user.getId()));
     }
 
+    /**
+     * Delete boolean.
+     *
+     * @param user the user
+     * @return the boolean
+     */
     public Boolean delete(User user){
         return this.conn.delete(user.getId());
     }
