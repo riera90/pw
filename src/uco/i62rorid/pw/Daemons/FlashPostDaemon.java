@@ -42,7 +42,6 @@ public class FlashPostDaemon extends Thread {
                         postController.patch(post);
                     }
                 }
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();//preserve the message
