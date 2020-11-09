@@ -22,7 +22,7 @@ public class Algo {
      */
     public byte[] getSHA256(String input) throws NoSuchAlgorithmException {
         try {
-            InputStream in = getClass().getResourceAsStream("/.env");
+            InputStream in = getClass().getResourceAsStream("/.properties");
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             Properties p = new Properties();
             p.load(reader);
@@ -30,7 +30,7 @@ public class Algo {
             return md.digest(input.getBytes(StandardCharsets.UTF_8));
         } catch (NullPointerException e) {
             try {
-                FileReader reader=new FileReader(".env");
+                FileReader reader=new FileReader(".properties");
                 Properties p = new Properties();
                 p.load(reader);
                 MessageDigest md = MessageDigest.getInstance(p.getProperty("PASSWORD_HASHING_ALGORITHM"));

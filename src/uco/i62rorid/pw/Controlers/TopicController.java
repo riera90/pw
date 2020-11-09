@@ -18,14 +18,14 @@ public class TopicController {
      */
     public TopicController(){
         try {
-            InputStream in = getClass().getResourceAsStream("/.env");
+            InputStream in = getClass().getResourceAsStream("/.properties");
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             Properties p = new Properties();
             p.load(reader);
             this.conn = new FileConn(p.getProperty("FILE_BASE_DIR")+p.getProperty("TOPIC_TABLE_NAME"));
         } catch (NullPointerException e){
             try {
-                FileReader reader=new FileReader(".env");
+                FileReader reader=new FileReader(".properties");
                 Properties p = new Properties();
                 p.load(reader);
                 this.conn = new FileConn(p.getProperty("FILE_BASE_DIR") + p.getProperty("TOPIC_TABLE_NAME"));
