@@ -1,8 +1,8 @@
 package es.uco.pw.display.CLI.Post.Show;
 
 
-import es.uco.pw.business.Controlers.UserController;
-import es.uco.pw.business.dao.post.DAOPost;
+import es.uco.pw.business.dao.user.DAOUser;
+import es.uco.pw.data.dto.post.DTOPost;
 import es.uco.pw.business.Utils.UserInput;
 import es.uco.pw.display.CLI.User.Show.ShowUser;
 
@@ -18,7 +18,7 @@ public class ShowPost {
      * @param post the post
      * @throws NoSuchAlgorithmException the no such algorithm exception
      */
-    public static void init(DAOPost post) throws NoSuchAlgorithmException {
+    public static void init(DTOPost post) throws NoSuchAlgorithmException {
         String menu = "\t1) User\n"+
                 "\t0) Go back\n" +
                 "\n" +
@@ -33,7 +33,7 @@ public class ShowPost {
                     System.out.print("Exiting");
                     return;
                 case 1:
-                    UserController userController = new UserController();
+                    DAOUser userController = new DAOUser();
                     ShowUser.init(userController.get(post.getOwner()));
                     break;
                 default:

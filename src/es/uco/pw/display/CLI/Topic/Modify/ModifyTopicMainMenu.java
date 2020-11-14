@@ -1,7 +1,7 @@
 package es.uco.pw.display.CLI.Topic.Modify;
 
-import es.uco.pw.business.Controlers.TopicController;
 import es.uco.pw.business.dao.topic.DAOTopic;
+import es.uco.pw.data.dto.topic.DTOTopic;
 import es.uco.pw.business.Utils.UserInput;
 import es.uco.pw.display.CLI.Post.Show.ShowPostsWithTopic;
 
@@ -17,7 +17,7 @@ public class ModifyTopicMainMenu {
      * @param topic the topic
      * @throws NoSuchAlgorithmException the no such algorithm exception
      */
-    public static void init(DAOTopic topic) throws NoSuchAlgorithmException {
+    public static void init(DTOTopic topic) throws NoSuchAlgorithmException {
         String menu = "\t1) Modify name of the topic\n"+
                 "\t2) Show posts with this topic\n"+
                 "\t3) DELETE\n"+
@@ -26,7 +26,7 @@ public class ModifyTopicMainMenu {
                 "Select an option: ";
 
         do {
-            TopicController topicController = new TopicController();
+            DAOTopic topicController = new DAOTopic();
             topic = topicController.get(topic.getId());
             UserInput.clear();
             System.out.print(topic+"\n\n");

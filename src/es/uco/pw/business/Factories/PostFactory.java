@@ -1,13 +1,13 @@
 package es.uco.pw.business.Factories;
 
-import es.uco.pw.business.dao.post.DAOPost;
+import es.uco.pw.data.dto.post.DTOPost;
 
 /**
  * The type Post factory.
  */
 public class PostFactory {
     private String type;
-    private DAOPost post;
+    private DTOPost post;
 
     /**
      * Instantiates a new Post factory.
@@ -15,8 +15,8 @@ public class PostFactory {
      * @param type the type
      */
     public PostFactory(String type){
-        this.post = new DAOPost();
-        for (String valid_type: DAOPost.TYPES) {
+        this.post = new DTOPost();
+        for (String valid_type: DTOPost.TYPES) {
             if (type.equals(valid_type)){
                 this.type = type;
                 break;
@@ -29,9 +29,9 @@ public class PostFactory {
      *
      * @return the post
      */
-    public DAOPost getPost(){
+    public DTOPost getPost(){
         if (this.type == null) return null;
-        DAOPost post = new DAOPost();
+        DTOPost post = new DTOPost();
         post.setType(this.type);
         return post;
     }

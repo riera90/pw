@@ -1,7 +1,7 @@
 package es.uco.pw.display.CLI.Post.Show;
 
-import es.uco.pw.business.Controlers.PostController;
 import es.uco.pw.business.dao.post.DAOPost;
+import es.uco.pw.data.dto.post.DTOPost;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
@@ -17,10 +17,10 @@ public class ShowPostsWithTopic {
      * @throws NoSuchAlgorithmException the no such algorithm exception
      */
     public static void init(Integer topicId) throws NoSuchAlgorithmException {
-        PostController postController = new PostController();
-        LinkedList<DAOPost> filteredPosts = new LinkedList<>();
-        LinkedList<DAOPost> allPosts = postController.get();
-        for (DAOPost post:allPosts) {
+        DAOPost postController = new DAOPost();
+        LinkedList<DTOPost> filteredPosts = new LinkedList<>();
+        LinkedList<DTOPost> allPosts = postController.get();
+        for (DTOPost post:allPosts) {
             if (post.getState()==null || !post.getState().equals("published")) continue;
             if (post.getTopics()!=null){
                 if (post.getTopics().contains(topicId)) filteredPosts.add(post);

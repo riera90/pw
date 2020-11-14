@@ -1,7 +1,7 @@
 package es.uco.pw.display.CLI.Post.Show.Filters;
 
-import es.uco.pw.business.Controlers.PostController;
 import es.uco.pw.business.dao.post.DAOPost;
+import es.uco.pw.data.dto.post.DTOPost;
 import es.uco.pw.business.Utils.UserInput;
 import es.uco.pw.display.CLI.Post.Show.ShowPosts;
 
@@ -18,11 +18,11 @@ public class FilterPostByPublicationDate {
      * @throws NoSuchAlgorithmException the no such algorithm exception
      */
     public static void init() throws NoSuchAlgorithmException {
-        PostController postController = new PostController();
+        DAOPost postController = new DAOPost();
         UserInput.clear();
         System.out.print("enter the publication date: [dd/mm/yyyy] ");
         String date = UserInput.getStringFromUser();
-        LinkedList<DAOPost> posts = postController.getByFieldLike("publishedAt", date);
+        LinkedList<DTOPost> posts = postController.getByFieldLike("publishedAt", date);
         ShowPosts.init(posts);
         UserInput.pause();
     }

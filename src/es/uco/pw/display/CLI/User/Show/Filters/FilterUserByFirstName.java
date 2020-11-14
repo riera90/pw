@@ -1,6 +1,6 @@
 package es.uco.pw.display.CLI.User.Show.Filters;
 
-import es.uco.pw.business.Controlers.UserController;
+import es.uco.pw.business.dao.user.DAOUser;
 import es.uco.pw.display.CLI.User.Show.ShowUsers;
 import es.uco.pw.business.Utils.UserInput;
 
@@ -17,7 +17,7 @@ public class FilterUserByFirstName {
      */
     public static void init() throws NoSuchAlgorithmException {
         String firstName;
-        UserController userController = new UserController();
+        DAOUser userController = new DAOUser();
         UserInput.clear();
         System.out.print("enter the first name: ");
         firstName = UserInput.getStringFromUser();

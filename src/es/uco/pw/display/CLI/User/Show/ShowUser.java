@@ -1,6 +1,6 @@
 package es.uco.pw.display.CLI.User.Show;
 
-import es.uco.pw.business.dao.user.DAOUser;
+import es.uco.pw.data.dto.user.DTOUser;
 import es.uco.pw.business.Utils.UserInput;
 
 import java.security.NoSuchAlgorithmException;
@@ -15,7 +15,7 @@ public class ShowUser {
      * @param user the user
      * @throws NoSuchAlgorithmException the no such algorithm exception
      */
-    public static void init(DAOUser user) throws NoSuchAlgorithmException {
+    public static void init(DTOUser user) throws NoSuchAlgorithmException {
         String menu = "\t1) Posts\n"+
                 "\t0) Go back\n" +
                 "\n" +

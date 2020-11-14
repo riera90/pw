@@ -1,6 +1,6 @@
 package es.uco.pw.display.CLI.Post.Modify;
 
-import es.uco.pw.business.dao.post.DAOPost;
+import es.uco.pw.data.dto.post.DTOPost;
 import es.uco.pw.business.Utils.UserInput;
 import es.uco.pw.display.CLI.Auth.AuthMainMenu;
 import es.uco.pw.display.CLI.UserSessionStateSingleton;
@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
  * The type Modify post main menu.
  */
 public class ModifyPostMainMenu {
-    public static void init(DAOPost post) throws NoSuchAlgorithmException {
+    public static void init(DTOPost post) throws NoSuchAlgorithmException {
         String menu = "\t1) DELETE\n"+
                 "\t0) Go back\n" +
                 "\n" +

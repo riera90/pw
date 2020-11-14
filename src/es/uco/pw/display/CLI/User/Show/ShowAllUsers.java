@@ -1,6 +1,6 @@
 package es.uco.pw.display.CLI.User.Show;
 
-import es.uco.pw.business.Controlers.UserController;
+import es.uco.pw.business.dao.user.DAOUser;
 import es.uco.pw.business.Utils.UserInput;
 
 import java.security.NoSuchAlgorithmException;
@@ -16,7 +16,7 @@ public class ShowAllUsers {
      */
     public static void init() throws NoSuchAlgorithmException {
         UserInput.clear();
-        UserController userController = new UserController();
+        DAOUser userController = new DAOUser();
         ShowUsers.init(userController.get());
     }
 }

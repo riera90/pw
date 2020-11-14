@@ -1,6 +1,6 @@
 package es.uco.pw.display.CLI;
 
-import es.uco.pw.business.dao.user.DAOUser;
+import es.uco.pw.data.dto.user.DTOUser;
 
 /**
  * The type User session state singleton.
@@ -10,7 +10,7 @@ public class UserSessionStateSingleton {
     /**
      * The Logged user.
      */
-    public DAOUser LoggedUser = null;
+    public DTOUser LoggedUser = null;
 
     private UserSessionStateSingleton(){}
 

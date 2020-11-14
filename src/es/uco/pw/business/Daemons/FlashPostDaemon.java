@@ -1,7 +1,7 @@
 package es.uco.pw.business.Daemons;
 
-import es.uco.pw.business.Controlers.PostController;
 import es.uco.pw.business.dao.post.DAOPost;
+import es.uco.pw.data.dto.post.DTOPost;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -28,10 +28,10 @@ public class FlashPostDaemon extends Thread {
         for (; !exit;){
             try {
                 Thread.sleep(5000);
-                PostController postController = new PostController();
-                LinkedList<DAOPost> posts = postController.getByField("type", "\"flash\"");
+                DAOPost postController = new DAOPost();
+                LinkedList<DTOPost> posts = postController.getByField("type", "\"flash\"");
                 Date now = new Date();
-                for (DAOPost post: posts){
+                for (DTOPost post: posts){
                     if (post.getState()==null) continue;
                     if (post.getState().equals("waiting") && post.getPublishedAt().before(now)){
                         post.setState("published");
