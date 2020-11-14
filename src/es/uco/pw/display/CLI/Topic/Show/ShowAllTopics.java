@@ -1,7 +1,7 @@
 package es.uco.pw.display.CLI.Topic.Show;
 
-import es.uco.pw.business.Controlers.TopicController;
 import es.uco.pw.business.dao.topic.DAOTopic;
+import es.uco.pw.data.dto.topic.DTOTopic;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
@@ -16,8 +16,8 @@ public class ShowAllTopics {
      * @throws NoSuchAlgorithmException the no such algorithm exception
      */
     public static void init() throws NoSuchAlgorithmException {
-        TopicController topicController = new TopicController();
-        LinkedList<DAOTopic> topics = topicController.get();
+        DAOTopic topicController = new DAOTopic();
+        LinkedList<DTOTopic> topics = topicController.get();
         ShowTopics.init(topics);
     }
 }

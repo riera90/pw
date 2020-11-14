@@ -1,7 +1,7 @@
 package es.uco.pw.display.CLI.User.Modify;
 
-import es.uco.pw.business.Controlers.UserController;
 import es.uco.pw.business.dao.user.DAOUser;
+import es.uco.pw.data.dto.user.DTOUser;
 import es.uco.pw.business.Utils.UserInput;
 import es.uco.pw.display.CLI.UserSessionStateSingleton;
 
@@ -17,7 +17,7 @@ public class ModifyUserMainMenu {
      * @param user the user
      * @throws NoSuchAlgorithmException the no such algorithm exception
      */
-    public static void init(DAOUser user) throws NoSuchAlgorithmException {
+    public static void init(DTOUser user) throws NoSuchAlgorithmException {
         String menu = "\t1) Modify First Name\n"+
                 "\t2) Modify Last Name\n"+
                 "\t3) Modify email\n" +
@@ -30,7 +30,7 @@ public class ModifyUserMainMenu {
                 "Select an option: ";
 
         do {
-            UserController userController = new UserController();
+            DAOUser userController = new DAOUser();
             user = userController.get(user.getId());
             UserInput.clear();
             System.out.print(user+"\n\n");

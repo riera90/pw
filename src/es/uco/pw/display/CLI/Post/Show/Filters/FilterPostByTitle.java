@@ -1,6 +1,6 @@
 package es.uco.pw.display.CLI.Post.Show.Filters;
 
-import es.uco.pw.business.Controlers.PostController;
+import es.uco.pw.business.dao.post.DAOPost;
 import es.uco.pw.business.Utils.UserInput;
 import es.uco.pw.display.CLI.Post.Show.ShowPosts;
 
@@ -16,7 +16,7 @@ public class FilterPostByTitle {
      * @throws NoSuchAlgorithmException the no such algorithm exception
      */
     public static void init() throws NoSuchAlgorithmException {
-        PostController postController = new PostController();
+        DAOPost postController = new DAOPost();
         System.out.print("enter the post name: ");
         String title = UserInput.getStringFromUser();
         ShowPosts.init(postController.getByFieldLike("title", title));

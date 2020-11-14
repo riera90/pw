@@ -1,7 +1,7 @@
 package es.uco.pw.display.CLI.User.Modify;
 
-import es.uco.pw.business.Controlers.UserController;
 import es.uco.pw.business.dao.user.DAOUser;
+import es.uco.pw.data.dto.user.DTOUser;
 import es.uco.pw.business.Utils.Algo;
 import es.uco.pw.business.Utils.UserInput;
 
@@ -17,8 +17,8 @@ public class ModifyUserPassword {
      * @param user the user
      * @throws NoSuchAlgorithmException the no such algorithm exception
      */
-    public static void init(DAOUser user) throws NoSuchAlgorithmException {
-        UserController userController = new UserController();
+    public static void init(DTOUser user) throws NoSuchAlgorithmException {
+        DAOUser userController = new DAOUser();
         System.out.print("new Password: ");
         String input = UserInput.getStringFromUser();
         if (input.equals("")) {

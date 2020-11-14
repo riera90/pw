@@ -1,84 +1,145 @@
 package es.uco.pw.business.dao.topic;
 
-import es.uco.pw.business.Utils.JSONParser;
+import es.uco.pw.business.Connectors.FileConn;
+import es.uco.pw.data.dto.topic.DTOTopic;
+
+import java.io.*;
+import java.util.LinkedList;
+import java.util.Properties;
 
 /**
- * The type Topic.
+ * The type Topic controller.
  */
 public class DAOTopic {
-    private Integer id;
-    private String name;
+    private FileConn conn;
 
     /**
-     * Gets id.
-     *
-     * @return the id
+     * Instantiates a new Topic controller.
      */
-    public Integer getId() {
-        return id;
+    public DAOTopic(){
+        try {
+            InputStream in = getClass().getResourceAsStream("/.properties");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            Properties p = new Properties();
+            p.load(reader);
+            this.conn = new FileConn(p.getProperty("FILE_BASE_DIR")+p.getProperty("TOPIC_TABLE_NAME"));
+        } catch (NullPointerException e){
+            try {
+                FileReader reader=new FileReader(".properties");
+                Properties p = new Properties();
+                p.load(reader);
+                this.conn = new FileConn(p.getProperty("FILE_BASE_DIR") + p.getProperty("TOPIC_TABLE_NAME"));
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Integer getNextId() {
+        LinkedList<String> all = this.conn.readAll();
+        if (all.size() == 0) return 0;
+        DTOTopic lastTopic = new DTOTopic(all.getLast());
+        return lastTopic.getId()+1;
     }
 
     /**
-     * Sets id.
+     * Get linked list.
+     *
+     * @return the linked list
+     */
+    public LinkedList<DTOTopic> get(){
+        LinkedList<DTOTopic> topics = new LinkedList<>();
+        for (String topicJson:conn.readAll()){
+            topics.add(new DTOTopic(topicJson));
+        }
+        return topics;
+    }
+
+    /**
+     * Get by field linked list.
+     *
+     * @param key   the key
+     * @param value the value
+     * @return the linked list
+     */
+    public LinkedList<DTOTopic> getByField(String key, String value){
+        LinkedList<DTOTopic> topics = new LinkedList<>();
+        for (String topicJson:conn.getLineByField(key, value)){
+            topics.add(new DTOTopic(topicJson));
+        }
+        return topics;
+    }
+
+    /**
+     * Get by field like linked list.
+     *
+     * @param key   the key
+     * @param value the value
+     * @return the linked list
+     */
+    public LinkedList<DTOTopic> getByFieldLike(String key, String value){
+        LinkedList<DTOTopic> topics = new LinkedList<>();
+        for (String topicJson:conn.getLineByFieldLike(key, value)){
+            topics.add(new DTOTopic(topicJson));
+        }
+        return topics;
+    }
+
+    /**
+     * Get topic.
      *
      * @param id the id
+     * @return the topic
      */
-    public void setId(Integer id) {
-        this.id = id;
+    public DTOTopic get(int id){
+        return new DTOTopic(conn.read(id));
     }
 
     /**
-     * Gets name.
+     * Post topic.
      *
-     * @return the name
+     * @param topic the topic
+     * @return the topic
      */
-    public String getName() {
-        return name;
+    public DTOTopic post(DTOTopic topic){
+        topic.setId(getNextId());
+        this.conn.append(topic.toJson());
+        return new DTOTopic(this.conn.read(topic.getId()));
     }
 
     /**
-     * Sets name.
+     * Put topic.
      *
-     * @param name the name
+     * @param topic the topic
+     * @return the topic
      */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "id: " + this.id + "\t" + this.name;
+    public DTOTopic put(DTOTopic topic){
+        this.conn.update(topic.toJson());
+        return new DTOTopic(this.conn.read(topic.getId()));
     }
 
     /**
-     * To json string.
+     * Patch topic.
      *
-     * @return the string
+     * @param topic the topic
+     * @return the topic
      */
-    public String toJson() {
-        return '{' +
-                (id==null ? "":("id:"+id+",")) +
-                (name ==null ? "":("name:\""+ name +"\",")) +
-                '}';
+    public DTOTopic patch(DTOTopic topic){
+        DTOTopic oldTopic = new DTOTopic(this.conn.read(topic.getId()));
+        DTOTopic newTopic = new DTOTopic(oldTopic.toJson() + topic.toJson());
+        this.conn.update(newTopic.toJson());
+        return new DTOTopic(this.conn.read(topic.getId()));
     }
 
     /**
-     * Instantiates a new Topic.
-     */
-    public DAOTopic() {
-
-    }
-
-    /**
-     * Instantiates a new Topic.
+     * Delete boolean.
      *
-     * @param json the json
+     * @param topic the topic
+     * @return the boolean
      */
-    public DAOTopic(String json) {
-        JSONParser jsonParser = new JSONParser(json);
-        while(jsonParser.getError()==0 && jsonParser.gotoNextField()){
-            if (jsonParser.getKey().equals("id")) this.id = jsonParser.getValueAsInt();
-            else if (jsonParser.getKey().equals("name")) this.name = jsonParser.getValueAsString();
-        }
+    public Boolean delete(DTOTopic topic){
+        return this.conn.delete(topic.getId());
     }
 }

@@ -1,8 +1,8 @@
 package es.uco.pw.display.CLI.User.Modify;
 
-import es.uco.pw.business.Controlers.TopicController;
-import es.uco.pw.business.Controlers.UserController;
+import es.uco.pw.business.dao.topic.DAOTopic;
 import es.uco.pw.business.dao.user.DAOUser;
+import es.uco.pw.data.dto.user.DTOUser;
 import es.uco.pw.business.Utils.UserInput;
 
 import java.util.LinkedList;
@@ -16,10 +16,10 @@ public class ModifyUserInterests {
      *
      * @param user the user
      */
-    public static void init(DAOUser user){
+    public static void init(DTOUser user){
         System.out.print("now enter the interests indexes, input -1 to stop adding more\n");
         UserInput.pause();
-        TopicController topicController = new TopicController();
+        DAOTopic topicController = new DAOTopic();
         System.out.println(topicController.get());
         int index;
         LinkedList<Integer> interests = new LinkedList<>();
@@ -27,7 +27,7 @@ public class ModifyUserInterests {
             System.out.print("Interest id: ");
             index = UserInput.getIdFromUser();
             if (index < 0) break;
-            UserController userController = new UserController();
+            DAOUser userController = new DAOUser();
             if (userController.get(index).getId() != null)
                 interests.add(index);
             else
@@ -37,7 +37,7 @@ public class ModifyUserInterests {
         }while(true);
         user.setInterests(interests);
 
-        UserController userController = new UserController();
+        DAOUser userController = new DAOUser();
         userController.patch(user);
         System.out.print("\nUser successfully Created\n");
         UserInput.pause();

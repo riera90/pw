@@ -1,7 +1,7 @@
 package es.uco.pw.display.CLI.Topic.Show.Filters;
 
-import es.uco.pw.business.Controlers.TopicController;
 import es.uco.pw.business.dao.topic.DAOTopic;
+import es.uco.pw.data.dto.topic.DTOTopic;
 import es.uco.pw.display.CLI.Topic.Show.ShowTopics;
 import es.uco.pw.business.Utils.UserInput;
 
@@ -18,11 +18,11 @@ public class FilterTopicByName {
      * @throws NoSuchAlgorithmException the no such algorithm exception
      */
     public static void init() throws NoSuchAlgorithmException {
-        TopicController topicController = new TopicController();
+        DAOTopic topicController = new DAOTopic();
         UserInput.clear();
         System.out.print("enter name of the topic: ");
         String value = UserInput.getStringFromUser();
-        LinkedList<DAOTopic> topics = topicController.getByField("topic", '"'+value+'"');
+        LinkedList<DTOTopic> topics = topicController.getByField("topic", '"'+value+'"');
         ShowTopics.init(topics);
     }
 }

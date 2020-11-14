@@ -1,8 +1,8 @@
 package es.uco.pw.display.CLI.Post.Show;
 
-import es.uco.pw.business.Controlers.PostController;
 import es.uco.pw.business.dao.post.DAOPost;
-import es.uco.pw.business.dao.user.DAOUser;
+import es.uco.pw.data.dto.post.DTOPost;
+import es.uco.pw.data.dto.user.DTOUser;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
@@ -17,11 +17,11 @@ public class ShowPostsOfUserTimeline {
      * @param user the user
      * @throws NoSuchAlgorithmException the no such algorithm exception
      */
-    public static void init(DAOUser user) throws NoSuchAlgorithmException {
-        PostController postController = new PostController();
-        LinkedList<DAOPost> filteredPosts = new LinkedList<>();
-        LinkedList<DAOPost> allPosts = postController.get();
-        for (DAOPost post:allPosts) {
+    public static void init(DTOUser user) throws NoSuchAlgorithmException {
+        DAOPost postController = new DAOPost();
+        LinkedList<DTOPost> filteredPosts = new LinkedList<>();
+        LinkedList<DTOPost> allPosts = postController.get();
+        for (DTOPost post:allPosts) {
             if (post.getState()==null || !post.getState().equals("published")) continue;
             if (!post.getType().equals("targeted")){
                 if (post.getOwner().equals(user.getId())) filteredPosts.add(post);

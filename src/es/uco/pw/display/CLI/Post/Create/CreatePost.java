@@ -1,9 +1,9 @@
 package es.uco.pw.display.CLI.Post.Create;
 
-import es.uco.pw.business.Controlers.PostController;
-import es.uco.pw.business.Controlers.TopicController;
-import es.uco.pw.business.Controlers.UserController;
 import es.uco.pw.business.dao.post.DAOPost;
+import es.uco.pw.business.dao.topic.DAOTopic;
+import es.uco.pw.business.dao.user.DAOUser;
+import es.uco.pw.data.dto.post.DTOPost;
 import es.uco.pw.business.Factories.PostFactory;
 import es.uco.pw.business.Utils.UserInput;
 import es.uco.pw.display.CLI.UserSessionStateSingleton;
@@ -31,8 +31,8 @@ public class CreatePost {
             else System.out.print("not a valid id\n");
         }while(true);
 
-        PostFactory postFactory = new PostFactory(DAOPost.TYPES[typeIndex-1]);
-        DAOPost post = postFactory.getPost();
+        PostFactory postFactory = new PostFactory(DTOPost.TYPES[typeIndex-1]);
+        DTOPost post = postFactory.getPost();
 
         UserInput.clear();
         System.out.print("\tEnter the following fields.\n\n");
@@ -57,7 +57,7 @@ public class CreatePost {
                 {
                     System.out.print("now enter the topics indexes, input -1 to stop adding more\n");
                     UserInput.pause();
-                    TopicController topicController = new TopicController();
+                    DAOTopic topicController = new DAOTopic();
                     System.out.println(topicController.get());
 
                     int index;
@@ -66,7 +66,7 @@ public class CreatePost {
                         System.out.print("Topic id: ");
                         index = UserInput.getIdFromUser();
                         if (index < 0) break;
-                        UserController userController = new UserController();
+                        DAOUser userController = new DAOUser();
                         if (userController.get(index).getId() != null)
                             topicsIndexes.add(index);
                         else
@@ -82,7 +82,7 @@ public class CreatePost {
                 {
                     System.out.print("now enter the users ids, input -1 to stop adding more\n");
                     UserInput.pause();
-                    UserController userController = new UserController();
+                    DAOUser userController = new DAOUser();
 
                     int index;
                     LinkedList<Integer> usersIndexes = new LinkedList<>();
@@ -105,7 +105,7 @@ public class CreatePost {
                 {
                     System.out.print("now enter the publication and removal dates\n");
                     UserInput.pause();
-                    UserController userController = new UserController();
+                    DAOUser userController = new DAOUser();
                     System.out.println(userController.get());
 
                     Date date = null;
@@ -130,7 +130,7 @@ public class CreatePost {
                 UserInput.pause();
         }
 
-        PostController postController = new PostController();
+        DAOPost postController = new DAOPost();
         postController.post(post);
         System.out.print("\nPost successfully Created\n");
         UserInput.pause();

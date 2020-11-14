@@ -1,6 +1,6 @@
 package es.uco.pw.display.CLI.Post.Show;
 
-import es.uco.pw.business.Controlers.PostController;
+import es.uco.pw.business.dao.post.DAOPost;
 import es.uco.pw.business.Utils.UserInput;
 
 import java.security.NoSuchAlgorithmException;
@@ -17,7 +17,7 @@ public class ShowPostsOfUserMenu {
      */
     public static void init(Integer userId) throws NoSuchAlgorithmException {
         UserInput.clear();
-        PostController postController = new PostController();
+        DAOPost postController = new DAOPost();
         ShowPosts.init(postController.getByField("owner", userId.toString()));
     }
 }
