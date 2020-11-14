@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Main-Class: uco.i62rorid.pw.Main
+Main-Class: es.uco.pw.Main
