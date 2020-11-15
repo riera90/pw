@@ -14,7 +14,7 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: "true"
     volumes:
       - pw-mariadb-data:/var/lib/mysql
-      - ./int/01.sql:/docker-entrypoint-initdb.d
+      - ./init/01.sql:/docker-entrypoint-initdb.d
 
   adminer:
     image: adminer
