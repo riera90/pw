@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS `pw`;
+GRANT ALL ON `pw`.* TO 'user'@'%';

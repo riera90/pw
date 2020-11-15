@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  mariadb:
+    container_name: pw-database
+    image: mariadb
+    restart: on-failure
+    ports:
+      - 0.0.0.0:3306:3306
+    environment:
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+    volumes:
+      - pw-mariadb-data:/var/lib/mysql
+      - ./init/01.sql:/docker-entrypoint-initdb.d
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  pw-mariadb-data:
