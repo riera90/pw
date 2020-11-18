@@ -22,6 +22,8 @@ public class DBConn {
             user = p.getProperty("MYSQL_USER");
             password = p.getProperty("MYSQL_PASSWORD");
             address = p.getProperty("MYSQL_ADDRESS");
+            conn=DriverManager.getConnection(address, user, password);
+            Class.forName("com.mysql.jdbc.Driver");
         } catch (NullPointerException e){
             try {
                 FileReader reader=new FileReader(".properties");
@@ -30,15 +32,16 @@ public class DBConn {
                 user = p.getProperty("MYSQL_USER");
                 password = p.getProperty("MYSQL_PASSWORD");
                 address = p.getProperty("MYSQL_ADDRESS")+"/"+p.getProperty("MYSQL_DATABASE");
+                
             } catch (IOException e2) {
                 e2.printStackTrace();
             }
         } catch (IOException e) {
             e.printStackTrace();
             return null;
-        }
-        Class.forName("com.mysql.jdbc.Driver");
-        return DriverManager.getConnection(address, user, password);
+        }        
+
+        return conn;
     }
 
     static public ResultSet execQuery(Connection conn, String query) throws SQLException, ClassNotFoundException {
