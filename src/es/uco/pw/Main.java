@@ -30,6 +30,7 @@ public class Main {
             e.printStackTrace();
         }
 
+
         /*
         FlashPostDaemon flashPostDaemon = new FlashPostDaemon("flashPostDaemon");
         flashPostDaemon.start();
