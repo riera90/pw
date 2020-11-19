@@ -21,9 +21,7 @@ public class DBConn {
             p.load(reader);
             user = p.getProperty("MYSQL_USER");
             password = p.getProperty("MYSQL_PASSWORD");
-            address = p.getProperty("MYSQL_ADDRESS");
-            conn=DriverManager.getConnection(address, user, password);
-            Class.forName("com.mysql.jdbc.Driver");
+            address = "jdbc:mysql://"+p.getProperty("MYSQL_ADDRESS");
         } catch (NullPointerException e){
             try {
                 FileReader reader=new FileReader(".properties");
@@ -31,16 +29,16 @@ public class DBConn {
                 p.load(reader);
                 user = p.getProperty("MYSQL_USER");
                 password = p.getProperty("MYSQL_PASSWORD");
-                address = p.getProperty("MYSQL_ADDRESS")+"/"+p.getProperty("MYSQL_DATABASE");
-                
+                address = "jdbc:mysql://"+p.getProperty("MYSQL_ADDRESS")+"/"+p.getProperty("MYSQL_DATABASE");
             } catch (IOException e2) {
                 e2.printStackTrace();
             }
         } catch (IOException e) {
             e.printStackTrace();
             return null;
-        }        
-
+        }
+        Class.forName("com.mysql.jdbc.Driver");
+        conn=DriverManager.getConnection(address, user, password);
         return conn;
     }
 
