@@ -17,4 +17,11 @@ cp -r ./lib output
 
 cd output
 
-jar cvfm ../es.uco.pw.jar ./META-INF/MANIFEST.MF .properties ./lib/mysql-connector.jar $(find . -type f -name '*.class')
+jar cvfm ../artifacts/es.uco.pw.jar ./META-INF/MANIFEST.MF .properties ./lib/mysql-connector.jar $(find . -type f -name '*.class')
+
+cp -r ../WebContent .
+mkdir ./WebContent/WEB-INF/classes
+cp -r ./es ./WebContent/WEB-INF/classes
+cp ./../artifacts/es.uco.pw.jar ./WebContent/WEB-INF/lib
+
+jar -cvf ../artifacts/es.uco.pw.war ./WebContent
