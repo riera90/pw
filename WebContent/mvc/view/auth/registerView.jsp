@@ -6,7 +6,7 @@
         <meta charset="UTF-8">
     </head>
     <body>
-        <form method="post" action="../../control/auth/registerController.jsp">
+        <form method="post" action="./mvc/control/auth/registerController.jsp">
             <div class="column">
                 <div><input type="text" id="firstName" placeholder="First Name" required></div>
                 <div><input type="text" id="lastName" placeholder="Last Name" required></div>
