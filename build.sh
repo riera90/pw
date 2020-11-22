@@ -5,9 +5,10 @@ if [[ -d ./output ]]; then
 fi
 mkdir output
 
-if [[ -f ./es.uco.pw.jar ]]; then
-  rm es.uco.pw.jar
+if [[ -d ./artifacts ]]; then
+  rm -rf ./artifacts
 fi
+mkdir artifacts
 
 javac -d ./output -s ./output -h ./output $(find ./src -type f -name '*.java')
 
