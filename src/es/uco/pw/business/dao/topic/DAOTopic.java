@@ -18,14 +18,14 @@ public class DAOTopic {
      */
     public DAOTopic(){
         try {
-            InputStream in = getClass().getResourceAsStream("/.properties");
+            InputStream in = getClass().getResourceAsStream("/config.properties");
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             Properties p = new Properties();
             p.load(reader);
             this.conn = new FileConn(p.getProperty("FILE_BASE_DIR")+p.getProperty("TOPIC_TABLE_NAME"));
         } catch (NullPointerException e){
             try {
-                FileReader reader=new FileReader(".properties");
+                FileReader reader=new FileReader("config.properties");
                 Properties p = new Properties();
                 p.load(reader);
                 this.conn = new FileConn(p.getProperty("FILE_BASE_DIR") + p.getProperty("TOPIC_TABLE_NAME"));

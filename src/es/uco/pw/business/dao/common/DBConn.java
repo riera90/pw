@@ -4,32 +4,35 @@ import java.io.*;
 import java.sql.*;
 import java.util.Properties;
 
+
 public class DBConn {
-    public DBConn(){
+    private DBConn(){
 
     }
 
-    static public Connection getConn() throws SQLException, ClassNotFoundException {
+    public static Connection getConn() throws SQLException, ClassNotFoundException {
         String user = "";
         String password = "";
         String address = "";
         Connection conn = null;
         try {
-            InputStream in = DBConn.class.getResourceAsStream("/.properties");
+            InputStream in = DBConn.class.getResourceAsStream("/config.properties");
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             Properties p = new Properties();
             p.load(reader);
             user = p.getProperty("MYSQL_USER");
             password = p.getProperty("MYSQL_PASSWORD");
-            address = "jdbc:mysql://"+p.getProperty("MYSQL_ADDRESS");
+            address = p.getProperty("MYSQL_ADDRESS");
+            
         } catch (NullPointerException e){
             try {
-                FileReader reader=new FileReader(".properties");
+                FileReader reader=new FileReader("config.properties");
                 Properties p = new Properties();
                 p.load(reader);
                 user = p.getProperty("MYSQL_USER");
                 password = p.getProperty("MYSQL_PASSWORD");
-                address = "jdbc:mysql://"+p.getProperty("MYSQL_ADDRESS")+"/"+p.getProperty("MYSQL_DATABASE");
+                address = p.getProperty("MYSQL_ADDRESS")+"/"+p.getProperty("MYSQL_DATABASE");
+                
             } catch (IOException e2) {
                 e2.printStackTrace();
             }
@@ -37,8 +40,8 @@ public class DBConn {
             e.printStackTrace();
             return null;
         }
-        Class.forName("com.mysql.jdbc.Driver");
         conn=DriverManager.getConnection(address, user, password);
+        Class.forName("com.mysql.jdbc.Driver");
         return conn;
     }
 

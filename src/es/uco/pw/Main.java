@@ -21,7 +21,7 @@ public class Main {
     public static void main(String[] args) throws NoSuchAlgorithmException {
         try {
             Connection conn = DBConn.getConn();
-            ResultSet rs = DBConn.execQuery(conn, "select * from pw.User");
+            ResultSet rs = DBConn.execQuery(conn, "select * from i82nafea.User");
             while (rs.next()){
                 System.out.println(rs.getString("firstName"));
             }
