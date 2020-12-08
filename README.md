@@ -2,6 +2,9 @@
 ## Build
     ./build.sh
 
+## Deploy
+	./deploy.sh
+
 ## Execution
     java -jar out/pw.tar
 

@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%Class.forName("es.uco.pw");%>
-<%@ page import="java.security.NoSuchAlgorithmException" %>
+<%@ page import="es.uco.pw.data.dto.user.*" %>
 
 <%/*if (request.getParameter("firstName") == ""
 		|| request.getParameter("lastName") == ""
@@ -9,8 +8,8 @@
 <%//}%>
 
 <%
-	/*DTOUser user = new DTOUser();
-	user.setFirstName(request.getParameter("firstName"));
+	DTOUser user = new DTOUser();
+	/*user.setFirstName(request.getParameter("firstName"));
 	user.setLastName(request.getParameter("lastName"));
 	user.setEmail(request.getParameter("email"));
 	Algo algo = new Algo();
@@ -26,4 +25,4 @@
 	user = null;*/
 %>
 
-<jsp:forward page="./mvc/view/success.jsp"/>
+<jsp:forward page="../../view/success.jsp"/>

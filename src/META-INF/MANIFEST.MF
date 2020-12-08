@@ -1,5 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: es.uco.pw.Main
 Package: es.uco.pw
-Class-Path: lib/mysql-connector.jar
-
+Class-Path: WEB-INF/lib
