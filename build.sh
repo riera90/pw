@@ -32,10 +32,8 @@ cd ../..
 
 # adds the necessary files for the war
 cp -r WebContent/* output/war
-dir output/war/WEB-INF/classes
-cp -r output/classes/* output/war/WEB-INF/classes
+cp -r output/classes output/war/WEB-INF/classes
 cp ./.properties output/war
-#cp artifacts/es.uco.pw.jar output/war/WEB-INF/lib
 
 # move to output/war
 cd output/war
