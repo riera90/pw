@@ -19,10 +19,14 @@ public class Main {
      */
     public static void main(String[] args) throws NoSuchAlgorithmException {
         try {
+            System.out.println("geting connection");
             Connection conn = DBConn.getConn();
-            ResultSet rs = DBConn.execQuery(conn, "select * from i82nafea.User");
+            assert conn != null;
+            System.out.println("executing");
+            ResultSet rs = DBConn.execQuery(conn, "select * from pw.User");
+            System.out.println("result");
             while (rs.next()){
-                System.out.println(rs.getString("firstName"));
+                System.out.println("<"+rs.getString("firstName")+">");
             }
             conn.close();
         }catch (Exception e){
