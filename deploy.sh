@@ -22,7 +22,10 @@ rm es.uco.pw.war
 /opt/apache-tomcat-8.5.60/bin/shutdown.sh
 /opt/apache-tomcat-8.5.60/bin/startup.sh
 
-# show tomcat information and launch a firefox tab
-sleep 2
-sudo lsof -i -n -P | grep LISTEN | grep java
-firefox http://localhost:8080/pw &
+
+
+# kill the main process of google chrome
+kill -9 $(ps aux | grep google/chrome | head -n 1 | sed -r 's/[a-zA-Z]*\ *([0-9]{2,})\ *.*/\1/g')
+#sudo lsof -i -n -P | grep LISTEN | grep java
+google-chrome http://localhost:8080/pw &
+
