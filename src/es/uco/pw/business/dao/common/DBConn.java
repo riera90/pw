@@ -6,15 +6,16 @@ import java.util.Properties;
 
 
 public class DBConn {
-    private DBConn(){
+    private Connection conn;
 
+    public DBConn() throws SQLException, ClassNotFoundException {
+        conn = getConn();
     }
 
-    public static Connection getConn() throws SQLException, ClassNotFoundException {
+    private Connection getConn() throws SQLException, ClassNotFoundException {
         String user = "";
         String password = "";
         String address = "";
-        Connection conn = null;
         try {
             InputStream in = DBConn.class.getResourceAsStream("/config.properties");
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -45,12 +46,11 @@ public class DBConn {
         return conn;
     }
 
-    static public ResultSet execQuery(Connection conn, String query) throws SQLException, ClassNotFoundException {
-        Statement stmt= null;
-        ResultSet result = null;
-        assert conn != null;
-        stmt = conn.createStatement();
-        result = stmt.executeQuery(query);
-        return result;
+    public ResultSet execQuery(String query) throws SQLException {
+        return this.conn.createStatement().executeQuery(query);
+    }
+
+    public void close() throws SQLException {
+        this.conn.close();
     }
 }

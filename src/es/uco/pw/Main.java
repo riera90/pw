@@ -20,10 +20,9 @@ public class Main {
     public static void main(String[] args) throws NoSuchAlgorithmException {
         try {
             System.out.println("geting connection");
-            Connection conn = DBConn.getConn();
-            assert conn != null;
+            DBConn conn = new DBConn();
             System.out.println("executing");
-            ResultSet rs = DBConn.execQuery(conn, "select * from pw.User");
+            ResultSet rs = conn.execQuery("select * from pw.User");
             System.out.println("result");
             while (rs.next()){
                 System.out.println("<"+rs.getString("firstName")+">");
