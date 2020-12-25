@@ -25,7 +25,8 @@ rm es.uco.pw.war
 
 
 # kill the main process of google chrome
-kill -9 $(ps aux | grep google/chrome | head -n 1 | sed -r 's/[a-zA-Z]*\ *([0-9]{2,})\ *.*/\1/g')
+#kill -9 $(ps aux | grep google/chrome | head -n 1 | sed -r 's/[a-zA-Z]*\ *([0-9]{2,})\ *.*/\1/g')
 #sudo lsof -i -n -P | grep LISTEN | grep java
-google-chrome http://localhost:8080/pw &
-
+sleep 1
+firefox --private-window http://localhost:8080/pw
+#watch tail -n 40 /opt/apache-tomcat-8.5.60/logs/localhost.$(date +'%Y-%m-%d').log
