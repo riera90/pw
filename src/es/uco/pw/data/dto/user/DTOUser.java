@@ -1,8 +1,15 @@
 package es.uco.pw.data.dto.user;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Properties;
 
+import es.uco.pw.business.dao.common.DBConn;
 import es.uco.pw.business.dao.topic.DAOTopic;
 import es.uco.pw.business.Utils.JSONParser;
 
@@ -23,184 +30,97 @@ public class DTOUser {
     private String lastName;
     private String email;
     private String password;
-    private String role;
+    private Integer role_id;
     private LinkedList<Integer> interests;
     private Date bornAt;
     private Boolean isDeleted;
 
-    /**
-     * Gets id.
-     *
-     * @return the id
-     */
+
+    public static String[] getROLES() {
+        return ROLES;
+    }
+
+    public static void setROLES(String[] ROLES) {
+        DTOUser.ROLES = ROLES;
+    }
+
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Sets id.
-     *
-     * @param id the id
-     */
     public void setId(Integer id) {
         this.id = id;
     }
 
-    /**
-     * Gets first name.
-     *
-     * @return the first name
-     */
     public String getFirstName() {
         return firstName;
     }
 
-    /**
-     * Sets first name.
-     *
-     * @param firstName the first name
-     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    /**
-     * Gets last name.
-     *
-     * @return the last name
-     */
     public String getLastName() {
         return lastName;
     }
 
-    /**
-     * Sets last name.
-     *
-     * @param lastName the last name
-     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    /**
-     * Gets email.
-     *
-     * @return the email
-     */
     public String getEmail() {
         return email;
     }
 
-    /**
-     * Sets email.
-     *
-     * @param email the email
-     */
     public void setEmail(String email) {
         this.email = email;
     }
 
-    /**
-     * Gets password.
-     *
-     * @return the password
-     */
     public String getPassword() {
         return password;
     }
 
-    /**
-     * Sets password.
-     *
-     * @param password the password
-     */
     public void setPassword(String password) {
         this.password = password;
     }
 
-    /**
-     * Gets role.
-     *
-     * @return the role
-     */
-    public String getRole() {
-        return role;
+    public Integer getRole_id() {
+        return role_id;
     }
 
-    /**
-     * Sets role.
-     *
-     * @param role the role
-     */
-    public void setRole(String role) {
-        this.role = role;
+    public void setRole_id(Integer role_id) {
+        this.role_id = role_id;
     }
 
-    /**
-     * Gets interests.
-     *
-     * @return the interests
-     */
     public LinkedList<Integer> getInterests() {
         return interests;
     }
 
-    /**
-     * Sets interests.
-     *
-     * @param interests the interests
-     */
     public void setInterests(LinkedList<Integer> interests) {
         this.interests = interests;
     }
 
-    /**
-     * Gets born at.
-     *
-     * @return the born at
-     */
     public Date getBornAt() {
         return bornAt;
     }
 
-    /**
-     * Sets born at.
-     *
-     * @param bornAt the born at
-     */
     public void setBornAt(Date bornAt) {
         this.bornAt = bornAt;
     }
 
-    /**
-     * Gets deleted.
-     *
-     * @return the deleted
-     */
     public Boolean getDeleted() {
         return isDeleted;
     }
 
-    /**
-     * Sets deleted.
-     *
-     * @param deleted the deleted
-     */
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
     }
 
 
+
     @Override
     public String toString() {
-        StringBuilder retval = new StringBuilder("id: " + this.id + "\t" + this.firstName + " " + this.lastName + "\t<" + this.email + ">\t" + (this.role == null ? "" : this.role) + "\tborn at: " + (this.bornAt == null ? "" : JSONParser.getDateAsString(this.bornAt)) + "\n" +
-                "\tinterests:\n");
-        DAOTopic topicController = new DAOTopic();
-        if (this.interests.isEmpty()) return retval.toString();
-        for (int interestId:this.interests) {
-            retval.append("\t\t").append(topicController.get(interestId).toString()).append("\n");
-        }
-        return retval.toString();
+        return "id: "+this.id+"\t"+this.firstName+" "+this.lastName+"\t<"+this.email+">\trole_id: "+(this.role_id == null ? "" : this.role_id.toString())+"\tborn at: "+(this.bornAt == null ? "" : JSONParser.getDateAsString(this.bornAt))+"\tinterests: "+this.interests.toString()+"\n";
     }
 
     /**
@@ -210,22 +130,22 @@ public class DTOUser {
      */
     public String toJson() {
         return '{' +
-                (id==null ? "":("id:"+id+",")) +
-                (firstName==null ? "":("firstName:\""+firstName+"\",")) +
-                (lastName==null ? "":("lastName:\""+lastName+"\",")) +
-                (email==null ? "":("email:\""+email+"\",")) +
-                (password==null ? "":("password:\""+password+"\",")) +
-                (role==null ? "":("role:\""+role+"\",")) +
-                (interests==null ? "":("interests:"+interests+",")) +
-                (bornAt==null ? "":("bornAt:"+JSONParser.getDateAsString(bornAt)+",")) +
-                (isDeleted==null ? "":("isDeleted:"+isDeleted+",")) +
+                (id == null ? "" : ("id:" + id + ",")) +
+                (firstName == null ? "" : ("firstName:\"" + firstName + "\",")) +
+                (lastName == null ? "" : ("lastName:\"" + lastName + "\",")) +
+                (email == null ? "" : ("email:\"" + email + "\",")) +
+                (password == null ? "" : ("password:\"" + password + "\",")) +
+                (role_id == null ? "" : ("role:\"" + role_id + "\",")) +
+                (interests == null ? "" : ("interests:" + interests + ",")) +
+                (bornAt == null ? "" : ("bornAt:" + JSONParser.getDateAsString(bornAt) + ",")) +
+                (isDeleted == null ? "" : ("isDeleted:" + isDeleted + ",")) +
                 '}';
     }
 
     /**
      * Instantiates a new User.
      */
-    public DTOUser(){
+    public DTOUser() {
     }
 
     /**
@@ -235,16 +155,45 @@ public class DTOUser {
      */
     public DTOUser(String json) {
         JSONParser jsonParser = new JSONParser(json);
-        while(jsonParser.getError()==0 && jsonParser.gotoNextField()){
+        while (jsonParser.getError() == 0 && jsonParser.gotoNextField()) {
             if (jsonParser.getKey().equals("id")) this.id = jsonParser.getValueAsInt();
             else if (jsonParser.getKey().equals("firstName")) this.firstName = jsonParser.getValueAsString();
             else if (jsonParser.getKey().equals("lastName")) this.lastName = jsonParser.getValueAsString();
             else if (jsonParser.getKey().equals("email")) this.email = jsonParser.getValueAsString();
             else if (jsonParser.getKey().equals("password")) this.password = jsonParser.getValueAsString();
-            else if (jsonParser.getKey().equals("role")) this.role = jsonParser.getValueAsString();
+            else if (jsonParser.getKey().equals("role_id")) this.role_id = jsonParser.getValueAsInt();
             else if (jsonParser.getKey().equals("interests")) this.interests = jsonParser.getValueAsIntegerLinkedList();
             else if (jsonParser.getKey().equals("bornAt")) this.bornAt = jsonParser.getValueAsDate();
             else if (jsonParser.getKey().equals("isDeleted")) this.isDeleted = jsonParser.getValueAsBoolean();
+        }
+    }
+
+    public DTOUser(ResultSet rs) {
+        try {
+            DBConn conn = new DBConn();
+            FileReader reader = new FileReader("sql.properties");
+            Properties p = new Properties();
+            p.load(reader);
+            String query = p.getProperty("selectUserappTopics");
+
+            this.id = rs.getInt("id");
+            this.firstName = rs.getString("first_name");
+            this.lastName = rs.getString("last_name");
+            this.email = rs.getString("email");
+            this.password = rs.getString("password");
+            this.role_id = rs.getInt("role_id");
+            this.bornAt = rs.getDate("born_at");
+            this.isDeleted = rs.getBoolean("is_deleted");
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, this.id);
+            ResultSet rs_topics =  conn.execStatement(ps);
+            this.interests = new LinkedList<Integer>();
+            while (rs_topics.next()) {
+                this.interests.add(rs_topics.getInt("topic_id"));
+            }
+            conn.close();
+        } catch (IOException | SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -1,11 +1,10 @@
 package es.uco.pw;
 
-import es.uco.pw.business.Daemons.FlashPostDaemon;
 import es.uco.pw.business.dao.common.DBConn;
+import es.uco.pw.data.dto.user.DTOUser;
+
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * The type Main.
@@ -22,11 +21,11 @@ public class Main {
             System.out.println("geting connection");
             DBConn conn = new DBConn();
             System.out.println("executing");
-            ResultSet rs = conn.execQuery("select * from pw.User");
+            ResultSet rs = conn.execStatement("select * from pw.userapp");
             System.out.println("result");
-            while (rs.next()){
-                System.out.println("<"+rs.getString("firstName")+">");
-            }
+            rs.next();
+            DTOUser user = new DTOUser(rs);
+            System.out.println(user);
             conn.close();
         }catch (Exception e){
             e.printStackTrace();

@@ -25,7 +25,7 @@ create table userapp(
     first_name varchar(255)  not null,
     last_name  varchar(255)  not null,
     email      varchar(255)  not null,
-    birthday   date          not null,
+    born_at   date          not null,
     role_id    int           not null default 1,       foreign key (role_id) references userrole (id),
     password   varchar(1023) not null,
     is_deleted bool          not null default false
@@ -84,15 +84,15 @@ insert into topic (id, name) values (12, 'educación');
 insert into topic (id, name) values (13, 'cultura');
 insert into topic (id, name) values (14, 'actualidad');
 
-insert into userapp (id, first_name, last_name, email, birthday, role_id, password)
+insert into userapp (id, first_name, last_name, email, born_at, role_id, password)
             values (1, 'Diego', 'Rodríguez Riera', 'i62rorid@uco.es', '1998-02-07', 2, '');
-insert into userapp (id, first_name, last_name, email, birthday, role_id, password)
+insert into userapp (id, first_name, last_name, email, born_at, role_id, password)
             values (2, 'Ana', 'Navajas Fernández', 'i82nafea@uco.es', '2000-02-19', 2, '');
-insert into userapp (id, first_name, last_name, email, birthday, role_id, password)
+insert into userapp (id, first_name, last_name, email, born_at, role_id, password)
             values (3, 'José Raúl', 'Romero Salguero', 'jrromero@uco.es', '1972-11-22', 1, '');
-insert into userapp (id, first_name, last_name, email, birthday, role_id, password)
+insert into userapp (id, first_name, last_name, email, born_at, role_id, password)
             values (4, 'Carlos', 'Revuelto Quero', 'i82requc@uco.es', '2000-12-15', 1, '');
-insert into userapp (id, first_name, last_name, email, birthday, role_id, password)
+insert into userapp (id, first_name, last_name, email, born_at, role_id, password)
             values (5, 'Aurora', 'Ramírez Quesada', 'i72raqua@uco.es', '1980-11-22', 1, '');
 
 insert into userapp_topic (userapp_id, topic_id) values (1, 1);

@@ -8,6 +8,7 @@ import java.util.Properties;
 public class DBConn {
     private Connection conn;
 
+
     public DBConn() throws SQLException, ClassNotFoundException {
         conn = getConn();
     }
@@ -42,12 +43,20 @@ public class DBConn {
             return null;
         }
         Class.forName("com.mysql.jdbc.Driver");
-        conn=DriverManager.getConnection(address, user, password);
+        conn= DriverManager.getConnection(address, user, password);
         return conn;
     }
 
-    public ResultSet execQuery(String query) throws SQLException {
+    public PreparedStatement prepareStatement(String stmt) throws SQLException {
+        return this.conn.prepareStatement(stmt);
+    }
+
+    public ResultSet execStatement(String query) throws SQLException {
         return this.conn.createStatement().executeQuery(query);
+    }
+
+    public ResultSet execStatement(PreparedStatement ps) throws SQLException {
+        return ps.executeQuery();
     }
 
     public void close() throws SQLException {

@@ -6,6 +6,9 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    you are now logged in
+<%
+    String msg = request.getParameter("msg");
+    out.println("msg: "+msg);
+%>
 </body>
 </html>
