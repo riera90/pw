@@ -2,7 +2,6 @@ package es.uco.pw.business.dao.common;
 
 import java.io.*;
 import java.sql.*;
-import java.util.LinkedList;
 import java.util.Properties;
 
 

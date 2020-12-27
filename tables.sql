@@ -45,7 +45,7 @@ create table post(
     body                  text               not null,
     created_at            datetime default null,
     owner_id              int                not null,    foreign key (owner_id) references userapp (id),
-    state_id              enum ('edited','waiting','published','deleted'),
+    state                 enum ('edited','waiting','published','deleted'),
     published_at          datetime null default null,
     type                  enum ('general', 'flash', 'targeted', 'themed'),
     deleted_at            datetime null default null
@@ -122,14 +122,14 @@ insert into userapp_topic (userapp_id, topic_id) values (5, 13);
 insert into userapp_topic (userapp_id, topic_id) values (5, 14);
 
 
-insert into post (id, title, body, created_at, owner_id, state_id, published_at, type, deleted_at)
+insert into post (id, title, body, created_at, owner_id, state, published_at, type, deleted_at)
     values (
         1, 'Cosmopoética, Poetas del Mundo en Córdoba',
         'Cada año, en otoño, tiene lugar en Córdoba el Festival Internacional de Poesía Cosmopoética, un evento cultural que propone un amplio programa diseñado para atraer a un público diverso, en el que no falta la música, las conversaciones con narradores, los ',
         '2020-11-18 14:47:29', 2, 'published', null, 'general', null
     );
 
-insert into post (id, title, body, created_at, owner_id, state_id, published_at, type, deleted_at)
+insert into post (id, title, body, created_at, owner_id, state, published_at, type, deleted_at)
     values (
         2, 'Convocatoria ERASMUS+ 2021-2022',
         'La Universidad de Córdoba convoca PLAZAS para estancias de estudios de Grado y Máster en universidades europeas para el curso académico 2021/2022 en el marco de los acuerdos bilaterales firmados entre la Universidad de Córdoba y sus universidades socias.',
@@ -140,7 +140,7 @@ insert into post_userapp (post_id, userapp_id) values (2, 2);
 insert into post_userapp (post_id, userapp_id) values (2, 4);
 
 
-insert into post (id, title, body, created_at, owner_id, state_id, published_at, type, deleted_at)
+insert into post (id, title, body, created_at, owner_id, state, published_at, type, deleted_at)
     values (
         3, 'El Covid suma otros 11 muertos en Córdoba en una jornada con 235 positivos',
         'La pandemia de coronavirus sigue avanzando en la provincia de Córdoba, con unos datos que este viernes son buenos y malos a la vez. La mala noticia es que se incrementa de manera notable el número de víctimas mortales en la provincia. En total, y según lo',
@@ -150,14 +150,14 @@ insert into post_topic (post_id, topic_id) values (3, 11);
 insert into post_topic (post_id, topic_id) values (3, 14);
 
 
-insert into post (id, title, body, created_at, owner_id, state_id, published_at, type, deleted_at)
+insert into post (id, title, body, created_at, owner_id, state, published_at, type, deleted_at)
     values (
         4, 'MEDIA MARKT Black FRIDAY 2020',
         '¿Buscas lo último en tecnología e informática? Entonces ¡no te pierdas las ofertas del Black Friday y Cyber Monday 2020 de Media Markt! Encuentra todos los descuentos en el catálogo de ofertas Media Markt actual: Media Markt - Black Friday vigente a parti',
         '2020-11-19 14:56:39', 4, 'waiting', '2020-11-24 14:56:43', 'flash', '2020-12-28 14:56:48'
     );
 
-insert into post (id, title, body, created_at, owner_id, state_id, published_at, type, deleted_at)
+insert into post (id, title, body, created_at, owner_id, state, published_at, type, deleted_at)
     values (
         5, 'Fecha de entrega de práctica 2',
         'Estimados estudiantes,  como sabéis, la próxima semana se inicia la práctica 3. El primer día (próximo lunes/martes) será de explicación (servlets y problema de prácticas).   Dadas las circunstancias que estamos viviendo, donde la presencialidad se está c',

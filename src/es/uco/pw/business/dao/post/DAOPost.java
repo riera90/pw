@@ -1,9 +1,17 @@
 package es.uco.pw.business.dao.post;
 
 import es.uco.pw.business.Connectors.FileConn;
+import es.uco.pw.business.Utils.SqlQuery;
+import es.uco.pw.business.dao.common.DBConn;
+import es.uco.pw.business.dao.user.UserBuilder;
 import es.uco.pw.data.dto.post.DTOPost;
+import es.uco.pw.data.dto.user.DTOUser;
 
 import java.io.*;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Properties;
 
@@ -11,38 +19,19 @@ import java.util.Properties;
  * The type Post controller.
  */
 public class DAOPost {
-    private FileConn conn;
+    private DBConn conn;
 
     /**
      * Instantiates a new Post controller.
      */
     public DAOPost() {
         try {
-            InputStream in = getClass().getResourceAsStream("/config.properties");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            Properties p = new Properties();
-            p.load(reader);
-            this.conn = new FileConn(p.getProperty("FILE_BASE_DIR")+p.getProperty("POST_TABLE_NAME"));
-        } catch (NullPointerException e){
-            try {
-                FileReader reader=new FileReader("config.properties");
-                Properties p = new Properties();
-                p.load(reader);
-                this.conn = new FileConn(p.getProperty("FILE_BASE_DIR") + p.getProperty("POST_TABLE_NAME"));
-            } catch (IOException e2) {
-                e2.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            this.conn = new DBConn();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
         }
     }
 
-    private Integer getNextId() {
-        LinkedList<String> all = this.conn.readAll();
-        if (all.size() == 0) return 0;
-        DTOPost lastPost = new DTOPost(all.getLast());
-        return lastPost.getId()+1;
-    }
 
     /**
      * Get linked list.
@@ -51,8 +40,19 @@ public class DAOPost {
      */
     public LinkedList<DTOPost> get(){
         LinkedList<DTOPost> posts = new LinkedList<>();
-        for (String postJson:conn.readAll()){
-            posts.add(new DTOPost(postJson));
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectAllPosts");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            ResultSet rs = this.conn.execQuery(query);
+            while (rs.next()){
+                posts.add(PostBuilder.build(rs));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return posts;
     }
@@ -66,8 +66,21 @@ public class DAOPost {
      */
     public LinkedList<DTOPost> getByField(String key, String value){
         LinkedList<DTOPost> posts = new LinkedList<>();
-        for (String postJson:conn.getLineByField(key, value)){
-            posts.add(new DTOPost(postJson));
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectPostBy_"+key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setString(1, value);
+            ResultSet rs = this.conn.execQuery(stmt);
+            while (rs.next()){
+                posts.add(PostBuilder.build(rs));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return posts;
     }
@@ -81,8 +94,21 @@ public class DAOPost {
      */
     public LinkedList<DTOPost> getByFieldLike(String key, String value){
         LinkedList<DTOPost> posts = new LinkedList<>();
-        for (String postJson:conn.getLineByFieldLike(key, value)){
-            posts.add(new DTOPost(postJson));
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectPostLike_"+key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setString(1, value);
+            ResultSet rs = this.conn.execQuery(stmt);
+            while (rs.next()){
+                posts.add(PostBuilder.build(rs));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return posts;
     }
@@ -94,7 +120,41 @@ public class DAOPost {
      * @return the post
      */
     public DTOPost get(int id){
-        return new DTOPost(conn.read(id));
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectPostBy_id");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setInt(1, id);
+            ResultSet rs = this.conn.execQuery(stmt);
+            rs.next();
+            return PostBuilder.build(rs);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new DTOPost();
+    }
+
+    private DTOPost get__(int id){
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectPostByIdIncludingDeleted");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setInt(1, id);
+            ResultSet rs = this.conn.execQuery(stmt);
+            rs.next();
+            return PostBuilder.build(rs);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new DTOPost();
     }
 
     /**
@@ -103,10 +163,54 @@ public class DAOPost {
      * @param post the post
      * @return the post
      */
-    public DTOPost post(DTOPost post){
-        post.setId(this.getNextId());
-        this.conn.append(post.toJson());
-        return new DTOPost(this.conn.read(post.getId()));
+    public Integer post(DTOPost post){
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("insertPost");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setString(1, post.getTitle());
+            stmt.setString(2, post.getBody());
+            stmt.setInt(3, post.getOwnerId());
+            stmt.setString(4, post.getState());
+            stmt.setString(5, post.getType());
+            stmt.setDate(6, new java.sql.Date(post.getCreatedAt().getTime()));
+            stmt.setDate(7, new java.sql.Date(post.getPublishedAt().getTime()));
+            stmt.setDate(8, new java.sql.Date(post.getDeletedAt().getTime()));
+            return this.conn.execStatement(stmt);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        for (Integer topic_id : post.getTopics()){
+            try {
+                query = SqlQuery.getQuery("insertPostTopic");
+                PreparedStatement ps = this.conn.prepareStatement(query);
+                ps.setInt(1, post.getId());
+                ps.setInt(1, topic_id);
+                if (conn.execStatement(ps) < 0){
+                    return -3; // error, could not insert
+                }
+            } catch (IOException | SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        for (Integer sent_to_id : post.getSentTo()){
+            try {
+                query = SqlQuery.getQuery("insertPostUserapp");
+                PreparedStatement ps = this.conn.prepareStatement(query);
+                ps.setInt(1, post.getId());
+                ps.setInt(1, sent_to_id);
+                if (conn.execStatement(ps) < 0){
+                    return -3; // error, could not insert
+                }
+            } catch (IOException | SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return -2;
     }
 
     /**
@@ -116,9 +220,31 @@ public class DAOPost {
      * @return the post
      */
     public DTOPost put(DTOPost post){
-        post.setId(getNextId());
-        this.conn.update(post.toJson());
-        return new DTOPost(this.conn.read(post.getId()));
+        if (post.getId() == null){ // creates the user if it does not have an id
+            return this.get__(this.post(post));
+        }
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("updatePost");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setString(1, post.getTitle());
+            stmt.setString(2, post.getBody());
+            stmt.setInt(3, post.getOwnerId());
+            stmt.setString(4, post.getState());
+            stmt.setString(5, post.getType());
+            stmt.setDate(6, new java.sql.Date(post.getCreatedAt().getTime()));
+            stmt.setDate(7, new java.sql.Date(post.getPublishedAt().getTime()));
+            stmt.setDate(8, new java.sql.Date(post.getDeletedAt().getTime()));
+            stmt.setInt(9, post.getId());
+            this.conn.execStatement(stmt);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return this.get__(post.getId());
     }
 
     /**
@@ -128,19 +254,33 @@ public class DAOPost {
      * @return the post
      */
     public DTOPost patch(DTOPost post){
-        DTOPost oldPost = new DTOPost(this.conn.read(post.getId()));
-        DTOPost newPost = new DTOPost(oldPost.toJson() + post.toJson());
-        this.conn.update(newPost.toJson());
-        return new DTOPost(this.conn.read(post.getId()));
+        if (post.getId() == null)
+            return new DTOPost();
+        DTOPost oldUser = this.get__(post.getId());
+        DTOPost newUser = PostBuilder.build(PostBuilder.toJson(oldUser).replace('}',' ') + PostBuilder.toJson(post).replace('{', ' '));
+        return put(newUser);
     }
 
     /**
      * Delete boolean.
      *
-     * @param post the post
      * @return the boolean
      */
-    public Boolean delete(DTOPost post){
-        return this.conn.delete(post.getId());
+    public boolean delete(Integer id){
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("deletePost");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setInt(1, id);
+            this.conn.execStatement(stmt);
+            return true;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return false;
     }
 }

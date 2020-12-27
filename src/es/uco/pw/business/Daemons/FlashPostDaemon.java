@@ -38,7 +38,6 @@ public class FlashPostDaemon extends Thread {
                         postController.patch(post);
                     }else if (post.getState().equals("published") && post.getDeletedAt().after(now)){
                         post.setState("deleted");
-                        post.setDeleted(true);
                         postController.patch(post);
                     }
                 }

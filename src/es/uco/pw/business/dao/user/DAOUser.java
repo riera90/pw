@@ -43,7 +43,7 @@ public class DAOUser {
         try {
             ResultSet rs = this.conn.execQuery(query);
             while (rs.next()){
-                users.add(new DTOUser(rs));
+                users.add(UserBuilder.build(rs));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -71,7 +71,7 @@ public class DAOUser {
             stmt.setString(1, value);
             ResultSet rs = this.conn.execQuery(stmt);
             while (rs.next()){
-                users.add(new DTOUser(rs));
+                users.add(UserBuilder.build(rs));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -99,7 +99,7 @@ public class DAOUser {
             stmt.setString(1, value);
             ResultSet rs = this.conn.execQuery(stmt);
             while (rs.next()){
-                users.add(new DTOUser(rs));
+                users.add(UserBuilder.build(rs));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -125,7 +125,7 @@ public class DAOUser {
             stmt.setInt(1, id);
             ResultSet rs = this.conn.execQuery(stmt);
             rs.next();
-            return new DTOUser(rs);
+            return UserBuilder.build(rs);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -151,7 +151,7 @@ public class DAOUser {
             stmt.setInt(1, id);
             ResultSet rs = this.conn.execQuery(stmt);
             rs.next();
-            return new DTOUser(rs);
+            return UserBuilder.build(rs);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -177,11 +177,24 @@ public class DAOUser {
             stmt.setString(2, user.getLastName());
             stmt.setString(3, user.getEmail());
             stmt.setDate(4, new java.sql.Date(user.getBornAt().getTime()));
-            stmt.setInt(5, user.getRole_id());
+            stmt.setInt(5, user.getRoleId());
             stmt.setString(6, user.getPassword());
             return this.conn.execStatement(stmt);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+        for (Integer interest_id : user.getInterests()){
+            try {
+                query = SqlQuery.getQuery("insertUserappTopic");
+                PreparedStatement ps = this.conn.prepareStatement(query);
+                ps.setInt(1, user.getId());
+                ps.setInt(1, interest_id);
+                if (conn.execStatement(ps) < 0){
+                    return -3; // error, could not insert
+                }
+            } catch (IOException | SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
         return -2;
     }
@@ -197,7 +210,6 @@ public class DAOUser {
             return this.get__(this.post(user));
         }
         String query = null;
-        Integer id = -1;
         try {
             query = SqlQuery.getQuery("updateUserapp");
         } catch (IOException e) {
@@ -209,7 +221,7 @@ public class DAOUser {
             stmt.setString(2, user.getLastName());
             stmt.setString(3, user.getEmail());
             stmt.setDate(4, new java.sql.Date(user.getBornAt().getTime()));
-            stmt.setInt(5, user.getRole_id());
+            stmt.setInt(5, user.getRoleId());
             stmt.setString(6, user.getPassword());
             stmt.setBoolean(7, user.getDeleted());
             stmt.setInt(8, user.getId());
@@ -217,8 +229,73 @@ public class DAOUser {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        // interests
+        LinkedList<Integer> idsToRemove = new LinkedList<Integer>();
+        LinkedList<Integer> idsToAdd = new LinkedList<Integer>();
+        LinkedList<Integer> dbIds = new LinkedList<Integer>();
+
+        try {
+            query = SqlQuery.getQuery("selectUserappTopics");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, user.getId());
+            ResultSet rs_topics =  conn.execQuery(ps);
+            while (rs_topics.next()) {
+                dbIds.add(rs_topics.getInt("topic_id"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        // filter
+        idsToRemove = dbIds;
+        idsToAdd = user.getInterests();
+        for (Integer id : user.getInterests()){
+            if (dbIds.contains(id)){
+                idsToRemove.remove(id);
+                idsToAdd.remove(id);
+            }
+        }
+        for (Integer id : idsToAdd){
+            try {
+                query = SqlQuery.getQuery("insertUserappTopic");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.setInt(1, user.getId());
+                ps.setInt(1, id);
+                if (conn.execStatement(ps) < 0){
+                    return new DTOUser();
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        for (Integer id : idsToRemove){
+            try {
+                query = SqlQuery.getQuery("deleteUserappTopic");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.setInt(1, user.getId());
+                ps.setInt(1, id);
+                if (conn.execStatement(ps) < 0){
+                    return new DTOUser();
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
         return this.get__(user.getId());
     }
+
 
     /**
      * Patch dto user.
@@ -230,9 +307,7 @@ public class DAOUser {
         if (user.getId() == null)
             return new DTOUser();
         DTOUser oldUser = this.get__(user.getId());
-        DTOUser newUser = new DTOUser(oldUser.toJson().replace('}',' ') + user.toJson().replace('{', ' '));
-        System.out.println(oldUser.toJson().substring(0,oldUser.toJson().length()-1) + user.toJson().substring(1));
-        System.out.println(newUser.toJson());
+        DTOUser newUser = UserBuilder.build(UserBuilder.toJson(oldUser).replace('}',' ') + UserBuilder.toJson(user).replace('{', ' '));
         return put(newUser);
     }
 
@@ -243,7 +318,7 @@ public class DAOUser {
      * @param id the id
      * @return the integer
      */
-    public Integer delete(int id){
+    public boolean delete(Integer id){
         String query = null;
         try {
             query = SqlQuery.getQuery("deleteUserapp");
@@ -253,10 +328,11 @@ public class DAOUser {
         try {
             PreparedStatement stmt = this.conn.prepareStatement(query);
             stmt.setInt(1, id);
-            return this.conn.execStatement(stmt);
+            this.conn.execStatement(stmt);
+            return true;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return -2;
+        return false;
     }
 }
