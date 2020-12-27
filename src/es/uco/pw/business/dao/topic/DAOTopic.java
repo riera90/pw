@@ -1,9 +1,16 @@
 package es.uco.pw.business.dao.topic;
 
 import es.uco.pw.business.Connectors.FileConn;
+import es.uco.pw.business.Utils.SqlQuery;
+import es.uco.pw.business.dao.common.DBConn;
+import es.uco.pw.business.dao.post.PostBuilder;
+import es.uco.pw.data.dto.post.DTOPost;
 import es.uco.pw.data.dto.topic.DTOTopic;
 
 import java.io.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Properties;
 
@@ -11,37 +18,17 @@ import java.util.Properties;
  * The type Topic controller.
  */
 public class DAOTopic {
-    private FileConn conn;
+    private DBConn conn;
 
     /**
      * Instantiates a new Topic controller.
      */
     public DAOTopic(){
         try {
-            InputStream in = getClass().getResourceAsStream("/config.properties");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            Properties p = new Properties();
-            p.load(reader);
-            this.conn = new FileConn(p.getProperty("FILE_BASE_DIR")+p.getProperty("TOPIC_TABLE_NAME"));
-        } catch (NullPointerException e){
-            try {
-                FileReader reader=new FileReader("config.properties");
-                Properties p = new Properties();
-                p.load(reader);
-                this.conn = new FileConn(p.getProperty("FILE_BASE_DIR") + p.getProperty("TOPIC_TABLE_NAME"));
-            } catch (IOException e2) {
-                e2.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            this.conn = new DBConn();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
         }
-    }
-
-    private Integer getNextId() {
-        LinkedList<String> all = this.conn.readAll();
-        if (all.size() == 0) return 0;
-        DTOTopic lastTopic = new DTOTopic(all.getLast());
-        return lastTopic.getId()+1;
     }
 
     /**
@@ -51,8 +38,19 @@ public class DAOTopic {
      */
     public LinkedList<DTOTopic> get(){
         LinkedList<DTOTopic> topics = new LinkedList<>();
-        for (String topicJson:conn.readAll()){
-            topics.add(new DTOTopic(topicJson));
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectAllTopics");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            ResultSet rs = this.conn.execQuery(query);
+            while (rs.next()){
+                topics.add(TopicBuilder.build(rs));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return topics;
     }
@@ -66,8 +64,21 @@ public class DAOTopic {
      */
     public LinkedList<DTOTopic> getByField(String key, String value){
         LinkedList<DTOTopic> topics = new LinkedList<>();
-        for (String topicJson:conn.getLineByField(key, value)){
-            topics.add(new DTOTopic(topicJson));
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectTopicBy_"+key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setString(1, value);
+            ResultSet rs = this.conn.execQuery(stmt);
+            while (rs.next()){
+                topics.add(TopicBuilder.build(rs));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return topics;
     }
@@ -81,8 +92,21 @@ public class DAOTopic {
      */
     public LinkedList<DTOTopic> getByFieldLike(String key, String value){
         LinkedList<DTOTopic> topics = new LinkedList<>();
-        for (String topicJson:conn.getLineByFieldLike(key, value)){
-            topics.add(new DTOTopic(topicJson));
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectTopicLike_"+key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setString(1, value);
+            ResultSet rs = this.conn.execQuery(stmt);
+            while (rs.next()){
+                topics.add(TopicBuilder.build(rs));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return topics;
     }
@@ -94,7 +118,22 @@ public class DAOTopic {
      * @return the topic
      */
     public DTOTopic get(int id){
-        return new DTOTopic(conn.read(id));
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectTopicBy_id");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setInt(1, id);
+            ResultSet rs = this.conn.execQuery(stmt);
+            rs.next();
+            return TopicBuilder.build(rs);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new DTOTopic();
     }
 
     /**
@@ -103,10 +142,22 @@ public class DAOTopic {
      * @param topic the topic
      * @return the topic
      */
-    public DTOTopic post(DTOTopic topic){
-        topic.setId(getNextId());
-        this.conn.append(topic.toJson());
-        return new DTOTopic(this.conn.read(topic.getId()));
+    public Integer post(DTOTopic topic){
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("insertTopic");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setInt(1, topic.getId());
+            stmt.setString(2, topic.getName());
+            return this.conn.execStatement(stmt);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return -2;
     }
 
     /**
@@ -116,8 +167,24 @@ public class DAOTopic {
      * @return the topic
      */
     public DTOTopic put(DTOTopic topic){
-        this.conn.update(topic.toJson());
-        return new DTOTopic(this.conn.read(topic.getId()));
+        if (topic.getId() == null){ // creates the user if it does not have an id
+            return this.get(this.post(topic));
+        }
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("updateTopic");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setString(1, topic.getName());
+            stmt.setInt(2, topic.getId());
+            this.conn.execStatement(stmt);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return this.get(topic.getId());
     }
 
     /**
@@ -127,19 +194,10 @@ public class DAOTopic {
      * @return the topic
      */
     public DTOTopic patch(DTOTopic topic){
-        DTOTopic oldTopic = new DTOTopic(this.conn.read(topic.getId()));
-        DTOTopic newTopic = new DTOTopic(oldTopic.toJson() + topic.toJson());
-        this.conn.update(newTopic.toJson());
-        return new DTOTopic(this.conn.read(topic.getId()));
-    }
-
-    /**
-     * Delete boolean.
-     *
-     * @param topic the topic
-     * @return the boolean
-     */
-    public Boolean delete(DTOTopic topic){
-        return this.conn.delete(topic.getId());
+        if (topic.getId() == null)
+            return new DTOTopic();
+        DTOTopic oldTopic = this.get(topic.getId());
+        DTOTopic newTopic = TopicBuilder.build(TopicBuilder.toJson(oldTopic).replace('}',' ') + TopicBuilder.toJson(topic).replace('{', ' '));
+        return put(newTopic);
     }
 }
