@@ -1,5 +1,7 @@
 package es.uco.pw.business.Utils;
 
+import com.mysql.jdbc.ResultSet;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -190,7 +192,7 @@ public class JSONParser {
     }
 
     /**
-     * Get local now date.
+     * Get now date.
      *
      * @return the date
      */

@@ -1,5 +1,5 @@
 out
 output
 *.db
-.properties
+config.properties
 artifacts

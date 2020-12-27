@@ -25,9 +25,9 @@ public class PostFactory {
     }
 
     /**
-     * Get post post.
+     * Get post dto post.
      *
-     * @return the post
+     * @return the dto post
      */
     public DTOPost getPost(){
         if (this.type == null) return null;

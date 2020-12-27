@@ -1,47 +1,30 @@
 package es.uco.pw.business.dao.user;
 
-import es.uco.pw.business.Connectors.FileConn;
+import es.uco.pw.business.Utils.SqlQuery;
+import es.uco.pw.business.dao.common.DBConn;
 import es.uco.pw.data.dto.user.DTOUser;
 
 import java.io.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
-import java.util.Properties;
 
 /**
- * The type User controller.
+ * The type Dao user.
  */
 public class DAOUser {
-    private FileConn conn;
+    private DBConn conn;
 
     /**
-     * Instantiates a new User controller.
+     * Instantiates a new Dao user.
      */
-    public DAOUser(){
+    public DAOUser() {
         try {
-            InputStream in = getClass().getResourceAsStream("/config.properties");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            Properties p = new Properties();
-            p.load(reader);
-            this.conn = new FileConn(p.getProperty("FILE_BASE_DIR")+p.getProperty("USER_TABLE_NAME"));
-        } catch (NullPointerException e){
-            try {
-                FileReader reader=new FileReader("config.properties");
-                Properties p = new Properties();
-                p.load(reader);
-                this.conn = new FileConn(p.getProperty("FILE_BASE_DIR") + p.getProperty("USER_TABLE_NAME"));
-            } catch (IOException e2) {
-                e2.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            this.conn = new DBConn();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
         }
-    }
-
-    private Integer getNextId() {
-        LinkedList<String> all = this.conn.readAll();
-        if (all.size() == 0) return 0;
-        DTOUser lastUser = new DTOUser(all.getLast());
-        return lastUser.getId()+1;
     }
 
     /**
@@ -51,8 +34,19 @@ public class DAOUser {
      */
     public LinkedList<DTOUser> get(){
         LinkedList<DTOUser> users = new LinkedList<>();
-        for (String userJson:conn.readAll()){
-            users.add(new DTOUser(userJson));
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectAllUserapp");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            ResultSet rs = this.conn.execQuery(query);
+            while (rs.next()){
+                users.add(UserBuilder.build(rs));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return users;
     }
@@ -66,8 +60,21 @@ public class DAOUser {
      */
     public LinkedList<DTOUser> getByField(String key, String value){
         LinkedList<DTOUser> users = new LinkedList<>();
-        for (String userJson:conn.getLineByField(key, value)){
-            users.add(new DTOUser(userJson));
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectUserappBy_"+key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setString(1, value);
+            ResultSet rs = this.conn.execQuery(stmt);
+            while (rs.next()){
+                users.add(UserBuilder.build(rs));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return users;
     }
@@ -81,65 +88,244 @@ public class DAOUser {
      */
     public LinkedList<DTOUser> getByFieldLike(String key, String value){
         LinkedList<DTOUser> users = new LinkedList<>();
-        for (String userJson:conn.getLineByFieldLike(key, value)){
-            users.add(new DTOUser(userJson));
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectUserappLike_"+key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setString(1, value);
+            ResultSet rs = this.conn.execQuery(stmt);
+            while (rs.next()){
+                users.add(UserBuilder.build(rs));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return users;
     }
 
     /**
-     * Get user.
+     * Get dto user.
      *
      * @param id the id
-     * @return the user
+     * @return the dto user
      */
     public DTOUser get(int id){
-        return new DTOUser(conn.read(id));
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectUserappBy_id");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setInt(1, id);
+            ResultSet rs = this.conn.execQuery(stmt);
+            rs.next();
+            return UserBuilder.build(rs);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new DTOUser();
+    }
+
+    private DTOUser get__(int id){
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("selectUserappByIdIncludingDeleted");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setInt(1, id);
+            ResultSet rs = this.conn.execQuery(stmt);
+            rs.next();
+            return UserBuilder.build(rs);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new DTOUser();
     }
 
     /**
-     * Post user.
+     * Post integer.
      *
      * @param user the user
-     * @return the user
+     * @return the integer
      */
-    public DTOUser post(DTOUser user){
-        user.setId(getNextId());
-        this.conn.append(user.toJson());
-        return new DTOUser(this.conn.read(user.getId()));
+    public Integer post(DTOUser user){
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("insertUserapp");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setString(1, user.getFirstName());
+            stmt.setString(2, user.getLastName());
+            stmt.setString(3, user.getEmail());
+            stmt.setDate(4, new java.sql.Date(user.getBornAt().getTime()));
+            stmt.setInt(5, user.getRoleId());
+            stmt.setString(6, user.getPassword());
+            return this.conn.execStatement(stmt);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        for (Integer interest_id : user.getInterests()){
+            try {
+                query = SqlQuery.getQuery("insertUserappTopic");
+                PreparedStatement ps = this.conn.prepareStatement(query);
+                ps.setInt(1, user.getId());
+                ps.setInt(1, interest_id);
+                if (conn.execStatement(ps) < 0){
+                    return -3; // error, could not insert
+                }
+            } catch (IOException | SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return -2;
     }
 
     /**
-     * Put user.
+     * Put dto user.
      *
      * @param user the user
-     * @return the user
+     * @return the dto user
      */
     public DTOUser put(DTOUser user){
-        this.conn.update(user.toJson());
-        return new DTOUser(this.conn.read(user.getId()));
+        if (user.getId() == null){ // creates the user if it does not have an id
+            return this.get__(this.post(user));
+        }
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("updateUserapp");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setString(1, user.getFirstName());
+            stmt.setString(2, user.getLastName());
+            stmt.setString(3, user.getEmail());
+            stmt.setDate(4, new java.sql.Date(user.getBornAt().getTime()));
+            stmt.setInt(5, user.getRoleId());
+            stmt.setString(6, user.getPassword());
+            stmt.setBoolean(7, user.getDeleted());
+            stmt.setInt(8, user.getId());
+            this.conn.execStatement(stmt);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        // interests
+        LinkedList<Integer> idsToRemove = new LinkedList<Integer>();
+        LinkedList<Integer> idsToAdd = new LinkedList<Integer>();
+        LinkedList<Integer> dbIds = new LinkedList<Integer>();
+
+        try {
+            query = SqlQuery.getQuery("selectUserappTopics");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, user.getId());
+            ResultSet rs_topics =  conn.execQuery(ps);
+            while (rs_topics.next()) {
+                dbIds.add(rs_topics.getInt("topic_id"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        // filter
+        idsToRemove = dbIds;
+        idsToAdd = user.getInterests();
+        for (Integer id : user.getInterests()){
+            if (dbIds.contains(id)){
+                idsToRemove.remove(id);
+                idsToAdd.remove(id);
+            }
+        }
+        for (Integer id : idsToAdd){
+            try {
+                query = SqlQuery.getQuery("insertUserappTopic");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.setInt(1, user.getId());
+                ps.setInt(1, id);
+                if (conn.execStatement(ps) < 0){
+                    return new DTOUser();
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        for (Integer id : idsToRemove){
+            try {
+                query = SqlQuery.getQuery("deleteUserappTopic");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.setInt(1, user.getId());
+                ps.setInt(1, id);
+                if (conn.execStatement(ps) < 0){
+                    return new DTOUser();
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
+        return this.get__(user.getId());
     }
 
+
     /**
-     * Patch user.
+     * Patch dto user.
      *
      * @param user the user
-     * @return the user
+     * @return the dto user
      */
     public DTOUser patch(DTOUser user){
-        DTOUser oldUser = new DTOUser(this.conn.read(user.getId()));
-        DTOUser newUser = new DTOUser(oldUser.toJson() + user.toJson());
-        this.conn.update(newUser.toJson());
-        return new DTOUser(this.conn.read(user.getId()));
+        if (user.getId() == null)
+            return new DTOUser();
+        DTOUser oldUser = this.get__(user.getId());
+        DTOUser newUser = UserBuilder.build(UserBuilder.toJson(oldUser).replace('}',' ') + UserBuilder.toJson(user).replace('{', ' '));
+        return put(newUser);
     }
+
 
     /**
      * Delete boolean.
      *
-     * @param user the user
+     * @param id the id
      * @return the boolean
      */
-    public Boolean delete(DTOUser user){
-        return this.conn.delete(user.getId());
+    public boolean delete(Integer id){
+        String query = null;
+        try {
+            query = SqlQuery.getQuery("deleteUserapp");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(query);
+            stmt.setInt(1, id);
+            this.conn.execStatement(stmt);
+            return true;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return false;
     }
 }

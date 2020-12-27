@@ -1,12 +1,19 @@
 package es.uco.pw.data.dto.post;
 
 import es.uco.pw.business.Utils.JSONParser;
+import es.uco.pw.business.Utils.SqlQuery;
+import es.uco.pw.business.dao.common.DBConn;
+import es.uco.pw.business.dao.post.PostBuilder;
 
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.LinkedList;
 
 /**
- * The type Post.
+ * The type Dto post.
  */
 public class DTOPost {
     /**
@@ -36,12 +43,11 @@ public class DTOPost {
     private Date createdAt;
     private Date publishedAt;
     private Date deletedAt;
-    private Integer owner;
+    private Integer ownerId;
     private LinkedList<Integer> sentTo;
     private String type;
     private String state;
     private LinkedList<Integer> topics;
-    private Boolean isDeleted; // unused
 
     /**
      * Gets id.
@@ -152,21 +158,21 @@ public class DTOPost {
     }
 
     /**
-     * Gets owner.
+     * Gets owner id.
      *
-     * @return the owner
+     * @return the owner id
      */
-    public Integer getOwner() {
-        return owner;
+    public Integer getOwnerId() {
+        return ownerId;
     }
 
     /**
-     * Sets owner.
+     * Sets owner id.
      *
-     * @param owner the owner
+     * @param owner_id the owner id
      */
-    public void setOwner(Integer owner) {
-        this.owner = owner;
+    public void setOwnerId(Integer owner_id) {
+        this.ownerId = owner_id;
     }
 
     /**
@@ -179,12 +185,21 @@ public class DTOPost {
     }
 
     /**
-     * Sets sent to.
+     * Add sent to.
      *
-     * @param sentTo the sent to
+     * @param sentToId the sent to id
      */
-    public void setSentTo(LinkedList<Integer> sentTo) {
-        this.sentTo = sentTo;
+    public void addSentTo(Integer sentToId) {
+        this.sentTo.add(sentToId);
+    }
+
+    /**
+     * Remove sent to.
+     *
+     * @param sentToId the sent to id
+     */
+    public void removeSentTo(Integer sentToId) {
+        this.sentTo.remove(sentToId);
     }
 
     /**
@@ -233,89 +248,37 @@ public class DTOPost {
     }
 
     /**
-     * Sets topics.
+     * Add topic.
      *
-     * @param topics the topics
+     * @param topicId the topic id
      */
-    public void setTopics(LinkedList<Integer> topics) {
-        this.topics = topics;
+    public void addTopic(Integer topicId) {
+        this.topics.add(topicId);
     }
 
     /**
-     * Gets deleted.
+     * Remove topic.
      *
-     * @return the deleted
+     * @param topicId the topic id
      */
-    public Boolean getDeleted() {
-        return isDeleted;
+    public void removeTopic(Integer topicId) {
+        this.topics.remove(topicId);
     }
 
-    /**
-     * Sets deleted.
-     *
-     * @param deleted the deleted
-     */
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
 
     @Override
     public String toString() {
-        return "Post" + toJson();
+        return "Post" + PostBuilder.toJson(this);
     }
 
-    /**
-     * To json string.
-     *
-     * @return the string
-     */
-    public String toJson() {
-        return '{' +
-                (id==null ? "":("id:"+id+",")) +
-                (title==null ? "":("title:\""+title+"\",")) +
-                (body==null ? "":("body:\""+body+"\",")) +
-                (createdAt==null ? "":("createdAt:"+JSONParser.getDateAsString(createdAt)+",")) +
-                (publishedAt==null ? "":("publishedAt:"+JSONParser.getDateAsString(publishedAt)+",")) +
-                (deletedAt==null ? "":("deletedAt:"+JSONParser.getDateAsString(deletedAt)+",")) +
-                (owner==null ? "":("owner:"+owner+",")) +
-                (sentTo==null ? "":("sentTo:"+sentTo+",")) +
-                (type==null ? "":("type:\""+type+"\",")) +
-                (state==null ? "":("state:\""+state+"\",")) +
-                (topics==null ? "":("topics:"+topics+",")) +
-                (isDeleted==null ? "":("isDeleted:"+isDeleted+",")) +
-                '}';
-    }
 
     /**
-     * Instantiates a new Post.
+     * Instantiates a new Dto post.
      */
     public DTOPost(){
-        this.isDeleted = false;
         this.createdAt = JSONParser.getNow();
+        this.topics = new LinkedList<>();
+        this.sentTo = new LinkedList<>();
     }
 
-    /**
-     * Instantiates a new Post.
-     *
-     * @param json the json
-     */
-    public DTOPost(String json) {
-        this.isDeleted = false;
-        this.createdAt = JSONParser.getNow();
-        JSONParser jsonParser = new JSONParser(json);
-        while(jsonParser.getError()==0 && jsonParser.gotoNextField()){
-            if (jsonParser.getKey().equals("id")) this.id = jsonParser.getValueAsInt();
-            else if (jsonParser.getKey().equals("title")) this.title = jsonParser.getValueAsString();
-            else if (jsonParser.getKey().equals("body")) this.body = jsonParser.getValueAsString();
-            else if (jsonParser.getKey().equals("createdAt")) this.createdAt = jsonParser.getValueAsDate();
-            else if (jsonParser.getKey().equals("publishedAt")) this.publishedAt = jsonParser.getValueAsDate();
-            else if (jsonParser.getKey().equals("deletedAt")) this.deletedAt = jsonParser.getValueAsDate();
-            else if (jsonParser.getKey().equals("owner")) this.owner = jsonParser.getValueAsInt();
-            else if (jsonParser.getKey().equals("sentTo")) this.sentTo = jsonParser.getValueAsIntegerLinkedList();
-            else if (jsonParser.getKey().equals("type")) this.type = jsonParser.getValueAsString();
-            else if (jsonParser.getKey().equals("state")) this.state = jsonParser.getValueAsString();
-            else if (jsonParser.getKey().equals("topics")) this.topics = jsonParser.getValueAsIntegerLinkedList();
-            else if (jsonParser.getKey().equals("isDeleted")) this.isDeleted = jsonParser.getValueAsBoolean();
-        }
-    }
 }
