@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.LinkedList;
 
 /**
- * The type Post.
+ * The type Dto post.
  */
 public class DTOPost {
     /**
@@ -160,7 +160,7 @@ public class DTOPost {
     /**
      * Gets owner id.
      *
-     * @return the owner
+     * @return the owner id
      */
     public Integer getOwnerId() {
         return ownerId;
@@ -169,7 +169,7 @@ public class DTOPost {
     /**
      * Sets owner id.
      *
-     * @param owner_id the owner
+     * @param owner_id the owner id
      */
     public void setOwnerId(Integer owner_id) {
         this.ownerId = owner_id;
@@ -184,10 +184,20 @@ public class DTOPost {
         return sentTo;
     }
 
+    /**
+     * Add sent to.
+     *
+     * @param sentToId the sent to id
+     */
     public void addSentTo(Integer sentToId) {
         this.sentTo.add(sentToId);
     }
 
+    /**
+     * Remove sent to.
+     *
+     * @param sentToId the sent to id
+     */
     public void removeSentTo(Integer sentToId) {
         this.sentTo.remove(sentToId);
     }
@@ -238,13 +248,19 @@ public class DTOPost {
     }
 
     /**
-     * Sets topics.
+     * Add topic.
      *
+     * @param topicId the topic id
      */
     public void addTopic(Integer topicId) {
         this.topics.add(topicId);
     }
 
+    /**
+     * Remove topic.
+     *
+     * @param topicId the topic id
+     */
     public void removeTopic(Integer topicId) {
         this.topics.remove(topicId);
     }
@@ -256,6 +272,9 @@ public class DTOPost {
     }
 
 
+    /**
+     * Instantiates a new Dto post.
+     */
     public DTOPost(){
         this.createdAt = JSONParser.getNow();
         this.topics = new LinkedList<>();

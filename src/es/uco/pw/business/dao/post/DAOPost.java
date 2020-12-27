@@ -16,13 +16,13 @@ import java.util.LinkedList;
 import java.util.Properties;
 
 /**
- * The type Post controller.
+ * The type Dao post.
  */
 public class DAOPost {
     private DBConn conn;
 
     /**
-     * Instantiates a new Post controller.
+     * Instantiates a new Dao post.
      */
     public DAOPost() {
         try {
@@ -114,10 +114,10 @@ public class DAOPost {
     }
 
     /**
-     * Get post.
+     * Get dto post.
      *
      * @param id the id
-     * @return the post
+     * @return the dto post
      */
     public DTOPost get(int id){
         String query = null;
@@ -158,10 +158,10 @@ public class DAOPost {
     }
 
     /**
-     * Post post post.
+     * Post integer.
      *
      * @param post the post
-     * @return the post
+     * @return the integer
      */
     public Integer post(DTOPost post){
         String query = null;
@@ -214,10 +214,10 @@ public class DAOPost {
     }
 
     /**
-     * Put post.
+     * Put dto post.
      *
      * @param post the post
-     * @return the post
+     * @return the dto post
      */
     public DTOPost put(DTOPost post){
         if (post.getId() == null){ // creates the user if it does not have an id
@@ -248,10 +248,10 @@ public class DAOPost {
     }
 
     /**
-     * Patch post.
+     * Patch dto post.
      *
      * @param post the post
-     * @return the post
+     * @return the dto post
      */
     public DTOPost patch(DTOPost post){
         if (post.getId() == null)
@@ -264,6 +264,7 @@ public class DAOPost {
     /**
      * Delete boolean.
      *
+     * @param id the id
      * @return the boolean
      */
     public boolean delete(Integer id){

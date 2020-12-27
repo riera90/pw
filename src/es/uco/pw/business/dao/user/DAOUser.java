@@ -132,13 +132,6 @@ public class DAOUser {
         return new DTOUser();
     }
 
-    /**
-     * Get dto user.
-     * include deleted users
-     *
-     * @param id the id
-     * @return the dto user
-     */
     private DTOUser get__(int id){
         String query = null;
         try {
@@ -159,10 +152,10 @@ public class DAOUser {
     }
 
     /**
-     * Post user.
+     * Post integer.
      *
      * @param user the user
-     * @return the new user id
+     * @return the integer
      */
     public Integer post(DTOUser user){
         String query = null;
@@ -313,10 +306,10 @@ public class DAOUser {
 
 
     /**
-     * Delete integer.
+     * Delete boolean.
      *
      * @param id the id
-     * @return the integer
+     * @return the boolean
      */
     public boolean delete(Integer id){
         String query = null;

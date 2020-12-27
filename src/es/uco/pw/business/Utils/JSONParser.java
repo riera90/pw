@@ -192,7 +192,7 @@ public class JSONParser {
     }
 
     /**
-     * Get local now date.
+     * Get now date.
      *
      * @return the date
      */

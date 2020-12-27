@@ -55,6 +55,9 @@ public class FlashPostDaemon extends Thread {
         }
     }
 
+    /**
+     * Stop thread.
+     */
     public void stopThread(){
         exit = true;
     }

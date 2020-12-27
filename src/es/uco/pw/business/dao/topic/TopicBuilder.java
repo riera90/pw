@@ -10,7 +10,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * The type Topic builder.
+ */
 public class TopicBuilder {
+    /**
+     * Build dto topic.
+     *
+     * @param rs the rs
+     * @return the dto topic
+     */
     public static DTOTopic build(ResultSet rs){
         DTOTopic topic = new DTOTopic();
         try {
@@ -22,6 +31,12 @@ public class TopicBuilder {
         return topic;
     }
 
+    /**
+     * Build dto topic.
+     *
+     * @param json the json
+     * @return the dto topic
+     */
     public static DTOTopic build(String json){
         DTOTopic topic = new DTOTopic();
         JSONParser jsonParser = new JSONParser(json);
@@ -32,6 +47,12 @@ public class TopicBuilder {
         return topic;
     }
 
+    /**
+     * To json string.
+     *
+     * @param topic the topic
+     * @return the string
+     */
     public static String toJson(DTOTopic topic){
         return '{' +
                 (topic.getId()==null ? "":("id:"+topic.getId()+",")) +

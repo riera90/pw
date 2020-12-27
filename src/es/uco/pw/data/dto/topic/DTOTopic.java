@@ -3,7 +3,7 @@ package es.uco.pw.data.dto.topic;
 import es.uco.pw.business.Utils.JSONParser;
 
 /**
- * The type Topic.
+ * The type Dto topic.
  */
 public class DTOTopic {
     private Integer id;
@@ -52,7 +52,7 @@ public class DTOTopic {
 
 
     /**
-     * Instantiates a new Topic.
+     * Instantiates a new Dto topic.
      */
     public DTOTopic() {
     }

@@ -15,13 +15,13 @@ import java.util.LinkedList;
 import java.util.Properties;
 
 /**
- * The type Topic controller.
+ * The type Dao topic.
  */
 public class DAOTopic {
     private DBConn conn;
 
     /**
-     * Instantiates a new Topic controller.
+     * Instantiates a new Dao topic.
      */
     public DAOTopic(){
         try {
@@ -112,10 +112,10 @@ public class DAOTopic {
     }
 
     /**
-     * Get topic.
+     * Get dto topic.
      *
      * @param id the id
-     * @return the topic
+     * @return the dto topic
      */
     public DTOTopic get(int id){
         String query = null;
@@ -137,10 +137,10 @@ public class DAOTopic {
     }
 
     /**
-     * Post topic.
+     * Post integer.
      *
      * @param topic the topic
-     * @return the topic
+     * @return the integer
      */
     public Integer post(DTOTopic topic){
         String query = null;
@@ -161,10 +161,10 @@ public class DAOTopic {
     }
 
     /**
-     * Put topic.
+     * Put dto topic.
      *
      * @param topic the topic
-     * @return the topic
+     * @return the dto topic
      */
     public DTOTopic put(DTOTopic topic){
         if (topic.getId() == null){ // creates the user if it does not have an id
@@ -188,10 +188,10 @@ public class DAOTopic {
     }
 
     /**
-     * Patch topic.
+     * Patch dto topic.
      *
      * @param topic the topic
-     * @return the topic
+     * @return the dto topic
      */
     public DTOTopic patch(DTOTopic topic){
         if (topic.getId() == null)

@@ -10,7 +10,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * The type User builder.
+ */
 public class UserBuilder {
+    /**
+     * Build dto user.
+     *
+     * @param rs the rs
+     * @return the dto user
+     */
     public static DTOUser build(ResultSet rs) {
         DTOUser user = new DTOUser();
         try {
@@ -37,6 +46,12 @@ public class UserBuilder {
         return user;
     }
 
+    /**
+     * Build dto user.
+     *
+     * @param json the json
+     * @return the dto user
+     */
     public static DTOUser build(String json) {
         DTOUser user = new DTOUser();
         JSONParser jsonParser = new JSONParser(json);
@@ -57,6 +72,12 @@ public class UserBuilder {
         return user;
     }
 
+    /**
+     * To json string.
+     *
+     * @param user the user
+     * @return the string
+     */
     public static String toJson(DTOUser user){
         return '{' +
                 (user.getId() == null ? "" : ("id:" + user.getId() + ",")) +

@@ -11,7 +11,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
+/**
+ * The type Post builder.
+ */
 public class PostBuilder {
+    /**
+     * Build dto post.
+     *
+     * @param rs the rs
+     * @return the dto post
+     */
     public static DTOPost build(ResultSet rs){
         DTOPost post = new DTOPost();
         try {
@@ -46,6 +55,12 @@ public class PostBuilder {
         return post;
     }
 
+    /**
+     * Build dto post.
+     *
+     * @param json the json
+     * @return the dto post
+     */
     public static DTOPost build(String json){
         DTOPost post = new DTOPost();
         JSONParser jsonParser = new JSONParser(json);
@@ -71,6 +86,12 @@ public class PostBuilder {
         return post;
     }
 
+    /**
+     * To json string.
+     *
+     * @param post the post
+     * @return the string
+     */
     public static String toJson(DTOPost post){
         return '{' +
                 (post.getId()==null ? "":("id:"+post.getId()+",")) +
