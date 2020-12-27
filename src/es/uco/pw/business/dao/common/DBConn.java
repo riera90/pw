@@ -2,6 +2,7 @@ package es.uco.pw.business.dao.common;
 
 import java.io.*;
 import java.sql.*;
+import java.util.LinkedList;
 import java.util.Properties;
 
 
@@ -51,11 +52,25 @@ public class DBConn {
         return this.conn.prepareStatement(stmt);
     }
 
-    public ResultSet execStatement(String query) throws SQLException {
-        return this.conn.createStatement().executeQuery(query);
+    public Integer execStatement(String query) throws SQLException {
+        PreparedStatement ps = this.conn.prepareStatement(query);
+        return this.execStatement(ps);
     }
 
-    public ResultSet execStatement(PreparedStatement ps) throws SQLException {
+    public Integer execStatement(PreparedStatement ps) throws SQLException {
+        ps.executeUpdate();
+        ResultSet rs = ps.getGeneratedKeys();
+        if (rs.next())
+            return rs.getInt(1);
+        return -1;
+    }
+
+    public ResultSet execQuery(String query) throws SQLException {
+        PreparedStatement ps = this.conn.prepareStatement(query);
+        return this.execQuery(ps);
+    }
+
+    public ResultSet execQuery(PreparedStatement ps) throws SQLException {
         return ps.executeQuery();
     }
 

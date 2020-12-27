@@ -25,7 +25,7 @@ create table userapp(
     first_name varchar(255)  not null,
     last_name  varchar(255)  not null,
     email      varchar(255)  not null,
-    born_at   date          not null,
+    born_at    date          not null,
     role_id    int           not null default 1,       foreign key (role_id) references userrole (id),
     password   varchar(1023) not null,
     is_deleted bool          not null default false

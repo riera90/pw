@@ -1,16 +1,14 @@
 package es.uco.pw.data.dto.user;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.Properties;
 
+import es.uco.pw.business.Utils.SqlQuery;
 import es.uco.pw.business.dao.common.DBConn;
-import es.uco.pw.business.dao.topic.DAOTopic;
 import es.uco.pw.business.Utils.JSONParser;
 
 /**
@@ -120,7 +118,7 @@ public class DTOUser {
 
     @Override
     public String toString() {
-        return "id: "+this.id+"\t"+this.firstName+" "+this.lastName+"\t<"+this.email+">\trole_id: "+(this.role_id == null ? "" : this.role_id.toString())+"\tborn at: "+(this.bornAt == null ? "" : JSONParser.getDateAsString(this.bornAt))+"\tinterests: "+this.interests.toString()+"\n";
+        return "id: "+this.id+"\t"+this.firstName+" "+this.lastName+"\t<"+this.email+">\trole_id: "+(this.role_id == null ? "" : this.role_id.toString())+"\tborn at: "+(this.bornAt == null ? "" : JSONParser.getDateAsString(this.bornAt))+"\tinterests: "+this.interests.toString();
     }
 
     /**
@@ -135,7 +133,7 @@ public class DTOUser {
                 (lastName == null ? "" : ("lastName:\"" + lastName + "\",")) +
                 (email == null ? "" : ("email:\"" + email + "\",")) +
                 (password == null ? "" : ("password:\"" + password + "\",")) +
-                (role_id == null ? "" : ("role:\"" + role_id + "\",")) +
+                (role_id == null ? "" : ("role_id:" + role_id.toString() + ",")) +
                 (interests == null ? "" : ("interests:" + interests + ",")) +
                 (bornAt == null ? "" : ("bornAt:" + JSONParser.getDateAsString(bornAt) + ",")) +
                 (isDeleted == null ? "" : ("isDeleted:" + isDeleted + ",")) +
@@ -170,12 +168,6 @@ public class DTOUser {
 
     public DTOUser(ResultSet rs) {
         try {
-            DBConn conn = new DBConn();
-            FileReader reader = new FileReader("sql.properties");
-            Properties p = new Properties();
-            p.load(reader);
-            String query = p.getProperty("selectUserappTopics");
-
             this.id = rs.getInt("id");
             this.firstName = rs.getString("first_name");
             this.lastName = rs.getString("last_name");
@@ -184,9 +176,11 @@ public class DTOUser {
             this.role_id = rs.getInt("role_id");
             this.bornAt = rs.getDate("born_at");
             this.isDeleted = rs.getBoolean("is_deleted");
+            DBConn conn = new DBConn();
+            String query = SqlQuery.getQuery("selectUserappTopics");
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, this.id);
-            ResultSet rs_topics =  conn.execStatement(ps);
+            ResultSet rs_topics =  conn.execQuery(ps);
             this.interests = new LinkedList<Integer>();
             while (rs_topics.next()) {
                 this.interests.add(rs_topics.getInt("topic_id"));
