@@ -19,11 +19,12 @@
         </script>
     </head>
     <body>
-        <form name="form" method="POST" action="./mvc/control/auth/registerController.jsp" onsubmit="safePasswordPost()">
+        <form name="form" method="POST" action="../../control/auth/registerController.jsp" onsubmit="safePasswordPost()">
             <div class="column">
                 <div><input id="firstName" type="text" name="firstName" placeholder="Nombre" required></div>
                 <div><input id="lastName" type="text" name="lastName" placeholder="Apellidos" required></div>
                 <div><input id="email" type="text" name="email" placeholder="Email" required></div>
+                <div><input id="bornAt" type="text" name="bornAt" placeholder="Fecha de nacimiento DD-MM-YYYY" required></div>
                 <div><input id="plainTextPassword" type="password" name="plainTextPassword" placeholder="Contraseña" required></div>
                 <input id="password" type="hidden" name="password">
                 <div><input type="submit" value="Registrar"></div>
