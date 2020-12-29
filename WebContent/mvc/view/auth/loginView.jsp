@@ -2,16 +2,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Iniciar sesión</title>
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/forge/0.8.2/forge.all.min.js"></script>
+    <script>
+        function safePasswordPost(){
+            var plainText = document.getElementById('plainTextPassword').value;
+            var md = forge.md.sha256.create();
+            md.start();
+            md.update(plainText, "utf8");
+            document.getElementById('password').value = md.digest().toHex();
+            document.getElementById('plainTextPassword').remove();
+            return true;
+        }
+    </script>
 </head>
-<body>
-<form method="post" action="../../control/auth/loginController.jsp">
-    <div class="column">
-        <div><input type="text" id="email" placeholder="Email" required></div>
-        <div><input type="password" id="password" placeholder="Password" required></div>
-        <div><input type="submit" value="Register"></div>
-    </div>
-</form>
-</body>
+    <body>
+    <form name="form" method="POST" action="../../control/auth/loginController.jsp" onsubmit="safePasswordPost()">
+        <div class="column">
+            <div><input id="email" type="text" name="email" placeholder="Email" required></div>
+            <div><input id="plainTextPassword" type="password" name="plainTextPassword" placeholder="Contraseña" required></div>
+            <input id="password" type="hidden" name="password">
+            <div><input type="submit" value="Iniciar sesión"></div>
+        </div>
+    </form>
+    </body>
 </html>

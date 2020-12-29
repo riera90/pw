@@ -8,6 +8,7 @@ import java.io.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 
 /**
@@ -159,27 +160,28 @@ public class DAOUser {
      */
     public Integer post(DTOUser user){
         String query = null;
+        PreparedStatement ps;
         try {
             query = SqlQuery.getQuery("insertUserapp");
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            PreparedStatement stmt = this.conn.prepareStatement(query);
-            stmt.setString(1, user.getFirstName());
-            stmt.setString(2, user.getLastName());
-            stmt.setString(3, user.getEmail());
-            stmt.setDate(4, new java.sql.Date(user.getBornAt().getTime()));
-            stmt.setInt(5, user.getRoleId());
-            stmt.setString(6, user.getPassword());
-            return this.conn.execStatement(stmt);
+            ps = this.conn.prepareStatement(query);
+            ps.setString(1, user.getFirstName());
+            ps.setString(2, user.getLastName());
+            ps.setString(3, user.getEmail());
+            ps.setDate(4, new java.sql.Date(user.getBornAt().getTime()));
+            ps.setInt(5, user.getRoleId());
+            ps.setString(6, user.getPassword());
+            return this.conn.execStatement(ps);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         for (Integer interest_id : user.getInterests()){
             try {
                 query = SqlQuery.getQuery("insertUserappTopic");
-                PreparedStatement ps = this.conn.prepareStatement(query);
+                ps = this.conn.prepareStatement(query);
                 ps.setInt(1, user.getId());
                 ps.setInt(1, interest_id);
                 if (conn.execStatement(ps) < 0){

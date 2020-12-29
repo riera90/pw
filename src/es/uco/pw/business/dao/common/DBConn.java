@@ -87,6 +87,7 @@ public class DBConn {
      * @throws SQLException the sql exception
      */
     public Integer execStatement(PreparedStatement ps) throws SQLException {
+        System.out.println("executing Statement <"+ps+">");
         ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys();
         if (rs.next())
@@ -103,6 +104,7 @@ public class DBConn {
      */
     public ResultSet execQuery(String query) throws SQLException {
         PreparedStatement ps = this.conn.prepareStatement(query);
+        System.out.println("executing Query <"+ps+">");
         return this.execQuery(ps);
     }
 

@@ -25,7 +25,7 @@ cp -r ./lib output/jar
 cd output/jar
 
 # builds the jar with necessary files
-jar cvfm ../../artifacts/es.uco.pw.jar META-INF/MANIFEST.MF ./.properties $(find . -type f -name '*.class')
+jar cvfm ../../artifacts/es.uco.pw.jar META-INF/MANIFEST.MF ./config.properties ./sql.properties $(find . -type f -name '*.class')
 
 # move to root
 cd ../..
@@ -33,7 +33,8 @@ cd ../..
 # adds the necessary files for the war
 cp -r WebContent/* output/war
 cp -r output/classes output/war/WEB-INF/classes
-cp ./.properties output/war
+cp ./config.properties output/war
+cp ./sql.properties output/war
 
 # move to output/war
 cd output/war

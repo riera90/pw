@@ -29,4 +29,4 @@ rm es.uco.pw.war
 #sudo lsof -i -n -P | grep LISTEN | grep java
 sleep 1
 firefox --private-window http://localhost:8080/pw
-watch tail -n 25 /opt/apache-tomcat-8.5.60/logs/catalina.out
+#watch tail -n 30 /opt/apache-tomcat-8.5.60/logs/catalina.out
