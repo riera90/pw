@@ -19,7 +19,7 @@
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 
-		if (email == "" || password == ""){
+		if (email == null || password == null){
 			%><jsp:forward page="/mvc/view/auth/loginView.jsp"/><%
 		}
 
