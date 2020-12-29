@@ -29,6 +29,7 @@
 		customer.registerLoginAttempt();
 
 		if (users.size() == 1 && users.get(0).getPassword().equals(password)){
+			customer.setUserId(users.get(0).getId());
 			%>
 				<jsp:forward page="/mvc/view/success.jsp">
 					<jsp:param name="msg" value="you are logged in"/>
