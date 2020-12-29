@@ -19,15 +19,20 @@
         </script>
     </head>
     <body>
+        <%
+            String error = request.getParameter("error");
+            if (error != null)
+                out.println(error);
+        %>
         <form name="form" method="POST" action="../../control/auth/registerController.jsp" onsubmit="safePasswordPost()">
             <div class="column">
-                <div><input id="firstName" type="text" name="firstName" placeholder="Nombre" required></div>
-                <div><input id="lastName" type="text" name="lastName" placeholder="Apellidos" required></div>
+                <div><input id="firstName" type="text" name="firstName" placeholder="First Name" required></div>
+                <div><input id="lastName" type="text" name="lastName" placeholder="Last Name" required></div>
                 <div><input id="email" type="text" name="email" placeholder="Email" required></div>
-                <div><input id="bornAt" type="text" name="bornAt" placeholder="Fecha de nacimiento DD-MM-YYYY" required></div>
-                <div><input id="plainTextPassword" type="password" name="plainTextPassword" placeholder="Contraseña" required></div>
+                <div><input id="bornAt" type="text" name="bornAt" placeholder="Birth Date DD-MM-YYYY" required></div>
+                <div><input id="plainTextPassword" type="password" name="plainTextPassword" placeholder="Password" required></div>
                 <input id="password" type="hidden" name="password">
-                <div><input type="submit" value="Registrar"></div>
+                <div><input type="submit" value="Register"></div>
             </div>
         </form>
     </body>
