@@ -10,5 +10,6 @@
     String msg = request.getParameter("msg");
     out.println("msg: "+msg);
 %>
+<a id="menuSignUp" href="/pw">Home</a>
 </body>
 </html>

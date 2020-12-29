@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Iniciar sesión</title>
+    <title>Log In</title>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/forge/0.8.2/forge.all.min.js"></script>
@@ -19,12 +19,17 @@
     </script>
 </head>
     <body>
+    <%
+        String error = request.getParameter("error");
+        if (error != null)
+            out.println(error);
+    %>
     <form name="form" method="POST" action="../../control/auth/loginController.jsp" onsubmit="safePasswordPost()">
         <div class="column">
             <div><input id="email" type="text" name="email" placeholder="Email" required></div>
-            <div><input id="plainTextPassword" type="password" name="plainTextPassword" placeholder="Contraseña" required></div>
+            <div><input id="plainTextPassword" type="password" name="plainTextPassword" placeholder="Password" required></div>
             <input id="password" type="hidden" name="password">
-            <div><input type="submit" value="Iniciar sesión"></div>
+            <div><input type="submit" value="Log In"></div>
         </div>
     </form>
     </body>
