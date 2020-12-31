@@ -1,12 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <jsp:useBean id="customer" class="es.uco.pw.display.javabean.CustomerBean" scope="session"/>
 
-<%@ page import="es.uco.pw.data.dto.user.DTOUser, es.uco.pw.business.dao.user.DAOUser"%>
+<%@ page import="es.uco.pw.data.dto.user.DTOUser" %>
+<%@ page import="es.uco.pw.business.dao.user.DAOUser" %>
 <%@ page import="es.uco.pw.business.dao.user.UserBuilder" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.text.ParseException" %>
 <%@ page import="java.text.DateFormat" %>
+<%@ page import="es.uco.pw.data.dto.topic.DTOTopic" %>
+<%@ page import="es.uco.pw.business.dao.topic.DAOTopic" %>
 
 
 <%
@@ -22,6 +25,7 @@
 			<jsp:param name="firstName" value="<%=user.getFirstName() %>"/>
 			<jsp:param name="lastName" value="<%=user.getLastName() %>"/>
 			<jsp:param name="bornAt" value="<%=dateString%>"/>
+			<jsp:param name="interestsIds" value="<%=user.getInterests().toString()%>"/>
 		</jsp:forward>
 		<%
 	}

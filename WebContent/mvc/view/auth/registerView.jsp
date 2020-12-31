@@ -1,3 +1,6 @@
+<%@ page import="es.uco.pw.business.dao.topic.DAOTopic" %>
+<%@ page import="es.uco.pw.data.dto.topic.DTOTopic" %>
+<%@ page import="java.util.LinkedList" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -43,14 +46,46 @@
             String bornAt = request.getParameter("bornAt");
             if (bornAt == null) bornAt = "";
 
+            String interestsIds = request.getParameter("interestsIds");
+            if (interestsIds == null) interestsIds = "";
         %>
         <form name="form" method="POST" action="../../control/auth/registerController.jsp" onsubmit="safePasswordPost()">
+
             <div class="column">
+                <label for="firstName">First Name :</label>
                 <div><input id="firstName" type="text" name="firstName" placeholder="First Name" value="<%=firstName%>" required></div>
+                <label for="lastName">Last Name :</label>
                 <div><input id="lastName" type="text" name="lastName" placeholder="Last Name" value="<%=lastName%>" required></div>
+                <label for="email">email :</label>
                 <div><input id="email" type="text" name="email" placeholder="Email" value="<%=email%>" required></div>
-                <div><input id="bornAt" type="text" name="bornAt" placeholder="Birth Date DD-MM-YYYY" value="<%=bornAt%>" required></div>
+                <label for="bornAt">Birth Date :</label>
+                <div><input id="bornAt" type="text" name="bornAt" placeholder="DD-MM-YYYY" value="<%=bornAt%>" required></div>
+                <label for="plainTextPassword">Password :</label>
                 <div><input id="plainTextPassword" type="password" name="plainTextPassword" placeholder="Password" required></div>
+                <label for="topics">Interests :</label>
+                <select name="topics" id="topics" multiple>
+                    <%
+                        DAOTopic topicController = new DAOTopic();
+                        LinkedList<DTOTopic> allTopics = topicController.get();
+                        for (String stringId : interestsIds.substring(1,interestsIds.length()-1).split(", ")){
+                            DTOTopic topic = topicController.get(Integer.parseInt(stringId));
+                            for (int i = 0; i < allTopics.size(); i++){
+                                if (topic.getId().equals(allTopics.get(i).getId())){
+                                    allTopics.remove(i);
+                                }
+                            }
+                            %>
+                                <option value="<%=topic.getId().toString()%>" selected><%=topic.getName()%></option>
+                            <%
+                        }
+                        for (DTOTopic topic : allTopics){
+                            %>
+                                <option value="<%=topic.getId().toString()%>"><%=topic.getName()%></option>
+                            <%
+                        }
+                    %>
+
+                </select>
                 <input id="password" type="hidden" name="password">
                 <div><input type="submit" value="Register"></div>
             </div>
