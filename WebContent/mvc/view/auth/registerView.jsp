@@ -19,10 +19,14 @@
         <script>
             function safePasswordPost(){
                 var plainText = document.getElementById('plainTextPassword').value;
-                var md = forge.md.sha256.create();
-                md.start();
-                md.update(plainText, "utf8");
-                document.getElementById('password').value = md.digest().toHex();
+                if (plainText === ""){
+                    document.getElementById('password').remove();
+                }else {
+                    var md = forge.md.sha256.create();
+                    md.start();
+                    md.update(plainText, "utf8");
+                    document.getElementById('password').value = md.digest().toHex();
+                }
                 document.getElementById('plainTextPassword').remove();
                 return true;
             }
@@ -46,8 +50,8 @@
             String bornAt = request.getParameter("bornAt");
             if (bornAt == null) bornAt = "";
 
-            String interestsIds = request.getParameter("interestsIds");
-            if (interestsIds == null) interestsIds = "";
+            String topicsIds = request.getParameter("topicsIds");
+            if (topicsIds == null) topicsIds = "";
         %>
         <form name="form" method="POST" action="../../control/auth/registerController.jsp" onsubmit="safePasswordPost()">
 
@@ -61,22 +65,24 @@
                 <label for="bornAt">Birth Date :</label>
                 <div><input id="bornAt" type="text" name="bornAt" placeholder="DD-MM-YYYY" value="<%=bornAt%>" required></div>
                 <label for="plainTextPassword">Password :</label>
-                <div><input id="plainTextPassword" type="password" name="plainTextPassword" placeholder="Password" required></div>
+                <div><input id="plainTextPassword" type="password" name="plainTextPassword" placeholder="Password"></div>
                 <label for="topics">Interests :</label>
-                <select name="topics" id="topics" multiple>
-                    <%
-                        DAOTopic topicController = new DAOTopic();
+                <div><select name="topics" id="topics" multiple>
+                    <%DAOTopic topicController = new DAOTopic();
                         LinkedList<DTOTopic> allTopics = topicController.get();
-                        for (String stringId : interestsIds.substring(1,interestsIds.length()-1).split(", ")){
-                            DTOTopic topic = topicController.get(Integer.parseInt(stringId));
-                            for (int i = 0; i < allTopics.size(); i++){
-                                if (topic.getId().equals(allTopics.get(i).getId())){
-                                    allTopics.remove(i);
+                        if (!topicsIds.equals("")){
+                            String[] topicsIdsString = topicsIds.substring(1,topicsIds.length()-1).split(", ");
+                            for (int i = 0; i < topicsIdsString.length; i++){
+                                DTOTopic topic = topicController.get(Integer.parseInt(topicsIdsString[i]));
+                                for (int j = 0; j < allTopics.size(); j++){
+                                    if (topic.getId().equals(allTopics.get(j).getId())){
+                                        allTopics.remove(j);
+                                    }
                                 }
+                                %>
+                                    <option value="<%=topic.getId().toString()%>" selected><%=topic.getName()%></option>
+                                <%
                             }
-                            %>
-                                <option value="<%=topic.getId().toString()%>" selected><%=topic.getName()%></option>
-                            <%
                         }
                         for (DTOTopic topic : allTopics){
                             %>
@@ -84,8 +90,7 @@
                             <%
                         }
                     %>
-
-                </select>
+                </select></div>
                 <input id="password" type="hidden" name="password">
                 <div><input type="submit" value="Register"></div>
             </div>

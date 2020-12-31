@@ -5,9 +5,6 @@ import java.util.LinkedList;
 
 import es.uco.pw.business.Utils.JSONParser;
 
-/**
- * The type Dto user.
- */
 public class DTOUser {
     private Integer id;
     private String firstName;
@@ -143,7 +140,8 @@ public class DTOUser {
      * @param interest_id the interest id
      */
     public void addInterest(Integer interest_id) {
-        this.interests.add(interest_id);
+        if (!this.interests.contains(interest_id))
+            this.interests.add(interest_id);
     }
 
     /**
@@ -153,6 +151,13 @@ public class DTOUser {
      */
     public void removeInterest(Integer interest_id) {
         this.interests.remove(interest_id);
+    }
+
+    /**
+     * Clear interests.
+     */
+    public void clearInterests(){
+        this.interests = new LinkedList<>();
     }
 
     /**

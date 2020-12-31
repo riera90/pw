@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -204,6 +205,7 @@ public class DAOUser {
         if (user.getId() == null){ // creates the user if it does not have an id
             return this.get__(this.post(user));
         }
+        System.out.println(UserBuilder.toJson(user));
         String query = null;
         try {
             query = SqlQuery.getQuery("updateUserapp");
@@ -225,9 +227,9 @@ public class DAOUser {
             throwables.printStackTrace();
         }
         // interests
-        LinkedList<Integer> idsToRemove = new LinkedList<Integer>();
-        LinkedList<Integer> idsToAdd = new LinkedList<Integer>();
-        LinkedList<Integer> dbIds = new LinkedList<Integer>();
+        LinkedList<Integer> idsToRemove;
+        LinkedList<Integer> idsToAdd;
+        LinkedList<Integer> dbIds = new LinkedList<>();
 
         try {
             query = SqlQuery.getQuery("selectUserappTopics");
@@ -245,14 +247,17 @@ public class DAOUser {
             throwables.printStackTrace();
         }
         // filter
-        idsToRemove = dbIds;
-        idsToAdd = user.getInterests();
-        for (Integer id : user.getInterests()){
-            if (dbIds.contains(id)){
-                idsToRemove.remove(id);
-                idsToAdd.remove(id);
+        idsToRemove = new LinkedList<>(dbIds);
+        idsToAdd = new LinkedList<>(user.getInterests());
+        for (Iterator<Integer> it = user.getInterests().iterator(); it.hasNext(); ){
+            Integer value = it.next();
+            if (dbIds.contains(value)){
+                idsToRemove.remove(value);
+                idsToAdd.remove(value);
             }
         }
+        System.out.println("to add: "+ idsToAdd);
+        System.out.println("to remove: "+ idsToRemove);
         for (Integer id : idsToAdd){
             try {
                 query = SqlQuery.getQuery("insertUserappTopic");
@@ -262,10 +267,8 @@ public class DAOUser {
             try {
                 PreparedStatement ps = conn.prepareStatement(query);
                 ps.setInt(1, user.getId());
-                ps.setInt(1, id);
-                if (conn.execStatement(ps) < 0){
-                    return new DTOUser();
-                }
+                ps.setInt(2, id);
+                conn.execStatement(ps);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -279,10 +282,8 @@ public class DAOUser {
             try {
                 PreparedStatement ps = conn.prepareStatement(query);
                 ps.setInt(1, user.getId());
-                ps.setInt(1, id);
-                if (conn.execStatement(ps) < 0){
-                    return new DTOUser();
-                }
+                ps.setInt(2, id);
+                conn.execStatement(ps);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -302,7 +303,7 @@ public class DAOUser {
         if (user.getId() == null)
             return new DTOUser();
         DTOUser oldUser = this.get__(user.getId());
-        DTOUser newUser = UserBuilder.build(UserBuilder.toJson(oldUser).replace('}',' ') + UserBuilder.toJson(user).replace('{', ' '));
+        DTOUser newUser = UserBuilder.build(UserBuilder.toJson(oldUser).replace('}', ' ').trim() + UserBuilder.toJson(user).substring(1));
         return put(newUser);
     }
 
