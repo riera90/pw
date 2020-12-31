@@ -6,10 +6,11 @@
     <meta charset="UTF-8">
 </head>
 <body>
+
+<a id="menuSignUp" href="/pwanabeldiego">Home</a><br>
 <%
     String msg = request.getParameter("msg");
     out.println("msg: "+msg);
 %>
-<a id="menuSignUp" href="/pw">Home</a>
 </body>
 </html>

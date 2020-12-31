@@ -2,7 +2,7 @@
 <jsp:useBean id="customer" class="es.uco.pw.display.javabean.CustomerBean" scope="session"/>
 
 <%if (customer.getUserId() != -1) {%>
-    <a id="menulogout" href="./mvc/control/auth/logoutController.jsp">Logout</a><br>
+    <a id="menulogout" href="pwanabeldiego/logout">Logout</a><br>
 <%}else{%>
     <a id="menuLogin" class="itemMenu" href="./mvc/control/auth/loginController.jsp">Log In</a><br>
 <%}%>
@@ -12,4 +12,4 @@
         else out.println("Modify");
     %>
 </a><br>
-<a id="menuHello" href="pw/hello">hello</a><br>
+<a id="menuHello" href="pwanabeldiego/hello">hello</a><br>
