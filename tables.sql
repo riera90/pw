@@ -85,15 +85,15 @@ insert into topic (id, name) values (13, 'cultura');
 insert into topic (id, name) values (14, 'actualidad');
 
 insert into userapp (id, first_name, last_name, email, born_at, role_id, password)
-            values (1, 'Diego', 'Rodríguez Riera', 'i62rorid@uco.es', '1998-02-07', 2, '');
+            values (1, 'Diego', 'Rodríguez Riera', 'i62rorid@uco.es', '1998-02-07', 2, '2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b');
 insert into userapp (id, first_name, last_name, email, born_at, role_id, password)
-            values (2, 'Ana', 'Navajas Fernández', 'i82nafea@uco.es', '2000-02-19', 2, '');
+            values (2, 'Ana', 'Navajas Fernández', 'i82nafea@uco.es', '2000-02-19', 2, '2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b');
 insert into userapp (id, first_name, last_name, email, born_at, role_id, password)
-            values (3, 'José Raúl', 'Romero Salguero', 'jrromero@uco.es', '1972-11-22', 1, '');
+            values (3, 'José Raúl', 'Romero Salguero', 'jrromero@uco.es', '1972-11-22', 1, '2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b');
 insert into userapp (id, first_name, last_name, email, born_at, role_id, password)
-            values (4, 'Carlos', 'Revuelto Quero', 'i82requc@uco.es', '2000-12-15', 1, '');
+            values (4, 'Carlos', 'Revuelto Quero', 'i82requc@uco.es', '2000-12-15', 1, '2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b');
 insert into userapp (id, first_name, last_name, email, born_at, role_id, password)
-            values (5, 'Aurora', 'Ramírez Quesada', 'i72raqua@uco.es', '1980-11-22', 1, '');
+            values (5, 'Aurora', 'Ramírez Quesada', 'i72raqua@uco.es', '1980-11-22', 1, '2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b');
 
 insert into userapp_topic (userapp_id, topic_id) values (1, 1);
 insert into userapp_topic (userapp_id, topic_id) values (1, 5);
