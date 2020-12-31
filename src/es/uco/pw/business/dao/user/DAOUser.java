@@ -202,29 +202,30 @@ public class DAOUser {
      * @return the dto user
      */
     public DTOUser put(DTOUser user){
-        if (user.getId() == null){ // creates the user if it does not have an id
-            return this.get__(this.post(user));
-        }
-        System.out.println(UserBuilder.toJson(user));
         String query = null;
-        try {
-            query = SqlQuery.getQuery("updateUserapp");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            PreparedStatement stmt = this.conn.prepareStatement(query);
-            stmt.setString(1, user.getFirstName());
-            stmt.setString(2, user.getLastName());
-            stmt.setString(3, user.getEmail());
-            stmt.setDate(4, new java.sql.Date(user.getBornAt().getTime()));
-            stmt.setInt(5, user.getRoleId());
-            stmt.setString(6, user.getPassword());
-            stmt.setBoolean(7, user.getDeleted());
-            stmt.setInt(8, user.getId());
-            this.conn.execStatement(stmt);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        if (user.getId() == null){ // creates the user if it does not have an id
+            user.setId(this.post(user));
+        }else {
+            System.out.println(UserBuilder.toJson(user));
+            try {
+                query = SqlQuery.getQuery("updateUserapp");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                PreparedStatement stmt = this.conn.prepareStatement(query);
+                stmt.setString(1, user.getFirstName());
+                stmt.setString(2, user.getLastName());
+                stmt.setString(3, user.getEmail());
+                stmt.setDate(4, new java.sql.Date(user.getBornAt().getTime()));
+                stmt.setInt(5, user.getRoleId());
+                stmt.setString(6, user.getPassword());
+                stmt.setBoolean(7, user.getDeleted());
+                stmt.setInt(8, user.getId());
+                this.conn.execStatement(stmt);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
         // interests
         LinkedList<Integer> idsToRemove;
