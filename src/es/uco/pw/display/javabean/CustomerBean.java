@@ -26,4 +26,8 @@ public class CustomerBean implements Serializable {
     public void registerLoginAttempt(){
         this.loginAttempts++;
     }
+
+    public void clearLoginAttempt(){
+        this.loginAttempts = 0;
+    }
 }
