@@ -5,6 +5,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <jsp:useBean id="customer" class="es.uco.pw.display.javabean.CustomerBean" scope="session"/>
 
+<%if (customer.getUserId() == -1){%>
+    <jsp:forward page="/mvc/view/auth/loginView.jsp"/>
+<%}%>
+
 <%
     LinkedList<Integer> postsIds = new LinkedList<>();
     LinkedList<DTOPost> posts = new DAOPost().get();
