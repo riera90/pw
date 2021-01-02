@@ -18,13 +18,14 @@
         }
     </script>
 </head>
+
     <body>
     <%
         String error = request.getParameter("error");
         if (error != null)
             out.println(error);
     %>
-    <form name="form" method="POST" action="../../control/auth/loginController.jsp" onsubmit="safePasswordPost()">
+    <form name="form" method="POST" action="${pageContext.request.contextPath}/mvc/control/auth/loginController.jsp" onsubmit="safePasswordPost()">
         <div class="column">
             <div><input id="email" type="text" name="email" placeholder="Email" required></div>
             <div><input id="plainTextPassword" type="password" name="plainTextPassword" placeholder="Password" required></div>

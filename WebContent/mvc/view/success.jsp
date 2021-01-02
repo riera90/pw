@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
+<jsp:include page="/include/topBar.jsp"/>
 
 <a id="menuSignUp" href="/pwanabeldiego">Home</a><br>
 <%
