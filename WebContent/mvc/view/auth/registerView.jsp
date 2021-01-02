@@ -1,16 +1,21 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="es.uco.pw.business.dao.topic.DAOTopic" %>
 <%@ page import="es.uco.pw.data.dto.topic.DTOTopic" %>
 <%@ page import="java.util.LinkedList" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<jsp:useBean id="customer" class="es.uco.pw.display.javabean.CustomerBean" scope="session"/>
 <!DOCTYPE html>
 <html>
     <head>
         <title>
             <%
-                String id = request.getParameter("id");
+                Integer id = customer.getUserId();
 
-                if (id == null) out.println("Register");
-                else out.println("Modify");
+                if (id == -1){
+                    out.println("Register");
+                }
+                else{
+                    out.println("Modify");
+                }
             %>
         </title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -33,6 +38,9 @@
     </head>
     <body>
         <%
+            if (id != -1)
+                %><jsp:include page="/include/topBar.jsp"/><%
+
             String error = request.getParameter("error");
             if (error != null)
                 out.println(error);
@@ -52,7 +60,7 @@
             String topicsIds = request.getParameter("topicsIds");
             if (topicsIds == null) topicsIds = "";
         %>
-        <form name="form" method="POST" action="../../control/auth/registerController.jsp" onsubmit="safePasswordPost()">
+        <form name="form" method="POST" action="${pageContext.request.contextPath}/mvc/control/auth/registerController.jsp" onsubmit="safePasswordPost()">
 
             <div class="column">
                 <label for="firstName">First Name :</label>

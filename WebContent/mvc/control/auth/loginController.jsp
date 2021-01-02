@@ -6,9 +6,7 @@
 <%
 	if (customer.getUserId() != -1){
 %>
-		<jsp:forward page="/mvc/view/success.jsp">
-			<jsp:param name="msg" value="you are logged in"/>
-		</jsp:forward>
+		<jsp:forward page="/mvc/control/board/boardController.jsp"/>
 <%
 	}
 
@@ -31,9 +29,7 @@
 		if (users.size() == 1 && users.get(0).getPassword().equals(password)){
 			customer.setUserId(users.get(0).getId());
 			%>
-				<jsp:forward page="/mvc/view/success.jsp">
-					<jsp:param name="msg" value="you are logged in"/>
-				</jsp:forward>
+				<jsp:forward page="/index.jsp"/>
 			<%
 		}else{
 			%>

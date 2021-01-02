@@ -20,10 +20,11 @@
             }
             LinkedList<DTOTopic> topics = new DAOTopic().get();
         %>
-        <script src="../../../js/boardFilter.js"></script>
+        <script src="${pageContext.request.contextPath}/js/boardFilter.js"></script>
     </head>
     <body>
-        <form name="searchForm" method="POST" action="../../control/board/boardController.jsp">
+    <jsp:include page="/include/topBar.jsp"/>
+        <form name="searchForm" method="POST" action="${pageContext.request.contextPath}/mvc/control/board/boardController.jsp">
             <div id="searchBox">
                 <label for="topicSearch">Topic</label>
                 <select id="topicSearch" name="topicSearch">

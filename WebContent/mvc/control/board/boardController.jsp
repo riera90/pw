@@ -8,7 +8,7 @@
 <jsp:useBean id="customer" class="es.uco.pw.display.javabean.CustomerBean" scope="session"/>
 
 <%if (customer.getUserId() == -1){%>
-    <jsp:forward page="/mvc/view/auth/loginView.jsp"/>
+    <jsp:forward page="/mvc/control/auth/loginController.jsp"/>
 <%}%>
 
 <%
