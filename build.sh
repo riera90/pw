@@ -1,4 +1,7 @@
 #!/bin/bash
+
+source config.properties
+
 # remove old files
 if [[ -d ./output ]]; then
   rm -rf ./output
@@ -14,11 +17,11 @@ fi
 mkdir artifacts
 
 # builds the classes
-javac -d output/classes -s output/classes -h output $(find src -type f -name '*.java')
+javac -classpath ".:./lib/servlet-api.jar" -d output/classes -s output/classes -h output $(find src -type f -name '*.java')
 
 # add necessary files for the jar
 cp -r ./src/META-INF output/jar
-cp ./.properties output/jar
+cp ./*.properties output/jar
 cp -r ./lib output/jar
 
 # move to output/jar
@@ -32,6 +35,7 @@ cd ../..
 
 # adds the necessary files for the war
 cp -r WebContent/* output/war
+cp -r lib output/war/WEB-INF
 cp -r output/classes output/war/WEB-INF/classes
 cp ./config.properties output/war
 cp ./sql.properties output/war
