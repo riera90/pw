@@ -13,7 +13,16 @@
     LinkedList<Integer> postsIds = new LinkedList<>();
     LinkedList<DTOPost> posts = new DAOPost().get();
     for (DTOPost post : posts){
-        postsIds.add(post.getId());
+        if (!post.getState().equals("published"))
+            continue;
+        if (post.getType().equals("targeted")) {
+            for (Integer uid : post.getSentTo()) {
+                if (uid.equals(customer.getUserId()))
+                    postsIds.add(post.getId());
+            }
+        } else {
+            postsIds.add(post.getId());
+        }
     }
 %>
 
