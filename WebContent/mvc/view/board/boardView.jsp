@@ -1,6 +1,8 @@
 <%@ page import="java.util.LinkedList" %>
 <%@ page import="es.uco.pw.business.dao.post.DAOPost" %>
 <%@ page import="es.uco.pw.data.dto.post.DTOPost" %>
+<%@ page import="es.uco.pw.data.dto.topic.DTOTopic" %>
+<%@ page import="es.uco.pw.business.dao.topic.DAOTopic" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -12,17 +14,29 @@
             for (String postIdString : postsIdsString.substring(1,postsIdsString.length()-1).split(", ")){
                 postsIds.add(Integer.parseInt(postIdString));
             }
+            LinkedList<DTOTopic> topics = new DAOTopic().get();
         %>
         <script src="../../../js/boardFilter.js"></script>
     </head>
     <body>
         <div id="filterBox">
-            <div id="typeFilterBox">
-                <label for="typeFilter">Type</label><input id="typeFilter" type="text">
-                <label for="titleFilter">Title</label><input id="titleFilter" type="text">
-                <label for="topicFilter">Topic</label><input id="topicFilter" type="text">
-                <button onclick="filter()">Filter</button>
-            </div>
+            <label for="topicFilter">Topic</label>
+            <select id="topicFilter">
+                <option value="">--</option>
+                <%for (DTOTopic topic : topics){%>
+                    <option value="<%=topic.getId().toString()%>"><%=topic.getName()%></option>
+                <%}%>
+            </select>
+            <label for="titleFilter">Title</label><input id="titleFilter" type="text">
+            <label for="typeFilter">Type</label>
+            <select id="typeFilter">
+                <option value="">--</option>
+                <option value="general">General</option>
+                <option value="targeted">Targeted</option>
+                <option value="flash">Flash</option>
+                <option value="themed">Themed</option>
+            </select>
+            <button onclick="filter()">Filter</button>
         </div>
         <div id="postsContainer">
             <%
