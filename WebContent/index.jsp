@@ -12,4 +12,4 @@
         else out.println("Modify");
     %>
 </a><br>
-<a id="menuHello" href="pwanabeldiego/hello">hello</a><br>
+<a id="menuBoard" href="./mvc/control/board/boardController.jsp">board</a><br>
