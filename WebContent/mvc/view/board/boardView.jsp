@@ -12,13 +12,39 @@
             String postsIdsString = request.getParameter("postsIds");
             LinkedList<Integer> postsIds = new LinkedList<>();
             for (String postIdString : postsIdsString.substring(1,postsIdsString.length()-1).split(", ")){
-                postsIds.add(Integer.parseInt(postIdString));
+                try{
+                    postsIds.add(Integer.parseInt(postIdString));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
             LinkedList<DTOTopic> topics = new DAOTopic().get();
         %>
         <script src="../../../js/boardFilter.js"></script>
     </head>
     <body>
+        <form name="searchForm" method="POST" action="../../control/board/boardController.jsp">
+            <div id="searchBox">
+                <label for="topicSearch">Topic</label>
+                <select id="topicSearch" name="topicSearch">
+                    <option value="">--</option>
+                    <%for (DTOTopic topic : topics){%>
+                    <option value="<%=topic.getId().toString()%>"><%=topic.getName()%></option>
+                    <%}%>
+                </select>
+                <label for="titleSearch">Title</label><input id="titleSearch" name="titleSearch" type="text">
+                <label for="typeSearch">Type</label>
+                <select id="typeSearch" name="typeSearch">
+                    <option value="">--</option>
+                    <option value="general">General</option>
+                    <option value="targeted">Targeted</option>
+                    <option value="flash">Flash</option>
+                    <option value="themed">Themed</option>
+                </select>
+                <input type="submit" value="Search">
+            </div>
+        </form>
+
         <div id="filterBox">
             <label for="topicFilter">Topic</label>
             <select id="topicFilter">
