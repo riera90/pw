@@ -23,6 +23,7 @@
 </head>
     <body>
     <jsp:include page="/include/topBar.jsp"/>
+    <button onclick="addPost()">add</button>
 
     <div id="postsContainer">
             <%
