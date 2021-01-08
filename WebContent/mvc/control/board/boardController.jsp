@@ -36,9 +36,9 @@
     LinkedList<DTOPost> posts;
 
     if (filters[0] && !filters[1] && !filters[2])
-        posts = new DAOPost().getByField("topic", topicSearchId);
+        posts = new DAOPost().get();
     else if (!filters[0] && filters[1] && !filters[2])
-        posts = new DAOPost().getByFieldLike("title", titleSearch);
+        posts = new DAOPost().getByFieldLike("title", "%"+titleSearch+"%");
     else if (!filters[0] && !filters[1] && filters[2])
         posts = new DAOPost().getByField("type", typeSearch);
     else if (!filters[0] && !filters[1] && !filters[2])

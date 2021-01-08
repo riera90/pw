@@ -26,8 +26,8 @@
     <jsp:include page="/include/topBar.jsp"/>
         <form name="searchForm" method="POST" action="${pageContext.request.contextPath}/mvc/control/board/boardController.jsp">
             <div id="searchBox">
-                <label for="topicSearch">Topic</label>
-                <select id="topicSearch" name="topicSearch">
+                <label for="topicSearch" hidden>Topic</label>
+                <select id="topicSearch" name="topicSearch" hidden>
                     <option value="">--</option>
                     <%for (DTOTopic topic : topics){%>
                     <option value="<%=topic.getId().toString()%>"><%=topic.getName()%></option>
