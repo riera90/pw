@@ -71,10 +71,10 @@
                 for (Integer id : postsIds){
                     DTOPost post = postController.get(id);
             %>
-                    <div id="<%=post.getId()%>" style="margin: 50px">
+                    <div id="<%=post.getId()%>" style="margin: 20px">
                         <div id="title" name="title">title: <%=post.getTitle()%></div>
                         <div id="type" name="type">type: <%=post.getType()%></div>
-                        <div id="topics" name="topics">topics: <%for (Integer topic:post.getTopics()){out.println(new DAOTopic().get(topic).getName()+", ");}%></div>
+                        <div id="topics" name="topics"><%for (Integer topic:post.getTopics()){out.println(new DAOTopic().get(topic).getName()+", ");}%></div>
                         <div id="body" name="body" style="margin: 10px"><%=post.getBody()%></div>
                     </div>
                 <%}%>
