@@ -1,5 +1,6 @@
 package es.uco.pw.servlet;
 
+import es.uco.pw.business.Daemons.FlashPostDaemon;
 import es.uco.pw.business.dao.post.DAOPost;
 import es.uco.pw.data.dto.post.DTOPost;
 import es.uco.pw.display.javabean.CustomerBean;
@@ -19,6 +20,7 @@ import java.util.Date;
 @WebServlet(name = "post", urlPatterns = "/post")
 public class PostFormControllerServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        FlashPostDaemon.iteration();
         HttpSession session = request.getSession();
         Integer postId = -1;
         try {

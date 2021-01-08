@@ -4,13 +4,14 @@
 <%@ page import="es.uco.pw.business.dao.post.PostBuilder" %>
 <%@ page import="com.sun.org.apache.xpath.internal.operations.Bool" %>
 <%@ page import="java.util.Arrays" %>
+<%@ page import="es.uco.pw.business.Daemons.FlashPostDaemon" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <jsp:useBean id="customer" class="es.uco.pw.display.javabean.CustomerBean" scope="session"/>
 
 <%if (customer.getUserId() == -1){%>
     <jsp:forward page="/mvc/control/auth/loginController.jsp"/>
 <%}%>
-
+<%FlashPostDaemon.iteration();%>
 <%
     boolean[] filters = new boolean[3];
 

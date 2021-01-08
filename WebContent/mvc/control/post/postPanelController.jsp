@@ -2,13 +2,14 @@
 <%@ page import="es.uco.pw.data.dto.post.DTOPost" %>
 <%@ page import="es.uco.pw.business.dao.post.DAOPost" %>
 <%@ page import="java.util.Arrays" %>
+<%@ page import="es.uco.pw.business.Daemons.FlashPostDaemon" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <jsp:useBean id="customer" class="es.uco.pw.display.javabean.CustomerBean" scope="session"/>
 
 <%if (customer.getUserId() == -1){%>
 <jsp:forward page="/mvc/view/auth/loginView.jsp"/>
 <%}%>
-
+<%FlashPostDaemon.iteration();%>
 <%
     boolean[] filters = new boolean[3];
 

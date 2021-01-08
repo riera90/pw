@@ -28,22 +28,26 @@ public class FlashPostDaemon extends Thread {
         for (; !exit;){
             try {
                 Thread.sleep(5000);
-                DAOPost postController = new DAOPost();
-                LinkedList<DTOPost> posts = postController.getByField("type", "\"flash\"");
-                Date now = new Date();
-                for (DTOPost post: posts){
-                    if (post.getState()==null) continue;
-                    if (post.getState().equals("waiting") && post.getPublishedAt().before(now)){
-                        post.setState("published");
-                        postController.patch(post);
-                    }else if (post.getState().equals("published") && post.getDeletedAt().after(now)){
-                        post.setState("deleted");
-                        postController.patch(post);
-                    }
-                }
+                iteration();
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();//preserve the message
+            }
+        }
+    }
+
+    public static void iteration(){
+        DAOPost postController = new DAOPost();
+        LinkedList<DTOPost> posts = postController.getByField("type", "\"flash\"");
+        Date now = new Date();
+        for (DTOPost post: posts){
+            if (post.getState()==null) continue;
+            if (post.getState().equals("waiting") && post.getPublishedAt().before(now)){
+                post.setState("published");
+                postController.patch(post);
+            }else if (post.getState().equals("published") && post.getDeletedAt().after(now)){
+                post.setState("deleted");
+                postController.patch(post);
             }
         }
     }

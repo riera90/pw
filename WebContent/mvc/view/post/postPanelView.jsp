@@ -3,6 +3,7 @@
 <%@ page import="es.uco.pw.data.dto.post.DTOPost" %>
 <%@ page import="es.uco.pw.data.dto.topic.DTOTopic" %>
 <%@ page import="es.uco.pw.business.dao.topic.DAOTopic" %>
+<%@ page import="es.uco.pw.business.Daemons.FlashPostDaemon" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
