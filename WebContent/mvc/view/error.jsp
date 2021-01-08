@@ -8,10 +8,10 @@
 <body>
 <jsp:include page="/include/topBar.jsp"/>
 
-<a id="menuSignUp" href="/pwanabeldiego">Home</a><br>
+<br>
 <%
     String msg = request.getParameter("msg");
-    out.println("msg: "+msg);
+    out.println("error: "+msg);
 %>
 </body>
 </html>

@@ -20,6 +20,18 @@
         }
         LinkedList<DTOTopic> topics = new DAOTopic().get();
     %>
+    <script>
+        function addPost(){
+            this.sessionStorage.setItem("postId", "-1");
+            window.location.href=window.location.href.toString().split("/")[0]+"/pwanabeldiego/post";
+            return true;
+        }
+
+        function editPost(id){
+            window.location.href=window.location.href.toString().split("/")[0]+"/pwanabeldiego/post?id="+id;
+            return true;
+        }
+    </script>
 </head>
     <body>
     <jsp:include page="/include/topBar.jsp"/>

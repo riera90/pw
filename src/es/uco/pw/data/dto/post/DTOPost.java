@@ -265,6 +265,10 @@ public class DTOPost {
         this.topics.remove(topicId);
     }
 
+    public void clearTopics (){this.topics = new LinkedList<>();}
+
+    public void clearSentTo (){this.sentTo = new LinkedList<>();}
+
 
     @Override
     public String toString() {

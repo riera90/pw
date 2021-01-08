@@ -237,8 +237,14 @@ public class DAOPost {
             stmt.setString(4, post.getState());
             stmt.setString(5, post.getType());
             stmt.setDate(6, new java.sql.Date(post.getCreatedAt().getTime()));
-            stmt.setDate(7, new java.sql.Date(post.getPublishedAt().getTime()));
-            stmt.setDate(8, new java.sql.Date(post.getDeletedAt().getTime()));
+            if (post.getPublishedAt() == null)
+                stmt.setNull(7, 1);
+            else
+                stmt.setDate(7, new java.sql.Date(post.getPublishedAt().getTime()));
+            if (post.getDeletedAt() == null)
+                stmt.setNull(8, 1);
+            else
+                stmt.setDate(8, new java.sql.Date(post.getDeletedAt().getTime()));
             stmt.setInt(9, post.getId());
             this.conn.execStatement(stmt);
         } catch (SQLException throwables) {

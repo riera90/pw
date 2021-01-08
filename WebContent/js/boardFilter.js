@@ -8,6 +8,7 @@ function filterBy(key, value){
     return true;
 }
 
+
 function filterByLike(key, value){
     let posts = document.getElementById("postsContainer").children;
     for (let i = 0; i < posts.length; i++) {
@@ -17,6 +18,7 @@ function filterByLike(key, value){
     }
     return true;
 }
+
 
 function resetFilter(){
     for (let i = 0; i < document.getElementById("postsContainer").children.length; i++)
