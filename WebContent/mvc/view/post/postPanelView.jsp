@@ -44,10 +44,12 @@
                     DTOPost post = postController.get(id);
             %>
             <div id="<%=post.getId()%>">
-                <div id="title" name="title"><%=post.getTitle()%></div>
-                <div id="type" name="type"><%=post.getType()%></div>
-                <div id="topics" name="topics"><%=post.getTopics()%></div>
-                <div id="body" name="body"><%=post.getBody()%></div>
+                <div id="<%=post.getId()%>" style="margin: 50px">
+                    <div id="title" name="title">title: <%=post.getTitle()%></div>
+                    <div id="type" name="type">type: <%=post.getType()%></div>
+                    <div id="topics" name="topics">topics: <%for (Integer topic:post.getTopics()){out.println(new DAOTopic().get(topic).getName()+", ");}%></div>
+                    <div id="body" name="body" style="margin: 10px"><%=post.getBody()%></div>
+                </div>
                 <button onclick="editPost(<%=post.getId()%>)">edit</button>
             </div>
             <%}%>
