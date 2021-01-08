@@ -68,6 +68,6 @@
 	System.out.println(UserBuilder.toJson(retUser));
 %>
 
-<jsp:forward page="/mvc/view/success.jsp">
+<jsp:forward page="/mvc/view/error.jsp">
 	<jsp:param name="msg" value="<%= UserBuilder.toJson(user) %>"/>
 </jsp:forward>
